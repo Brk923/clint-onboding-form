@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --ink: #1E2A2E;
@@ -727,8 +728,8 @@
       successView.style.display = 'block';
       clearDraft();
       
-      // Send brief data quietly to MongoDB
-      sendToMongoDB(currentBriefData);
+      // Send brief data quietly to Supabase
+      sendToSupabase(currentBriefData);
     }
   });
 
@@ -1050,21 +1051,61 @@
     waBtn.href = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(text);
   }
 
-  // Paste your deployed Google Apps Script Web App URL here:
-  var GOOGLE_SHEET_WEB_APP_URL = "";
+  // Supabase Credentials (Paste your Supabase URL & Anon Key below)
+  var SUPABASE_URL = "";
+  var SUPABASE_ANON_KEY = "";
+  var supabaseClient = null;
 
-  // MongoDB API Endpoint
-  var MONGODB_API_URL = "/api/briefs";
+  if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
 
-  function sendToMongoDB(data) {
+  async function sendToSupabase(data) {
+    if (!supabaseClient) return;
     try {
-      fetch(MONGODB_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      }).catch(function(err){ console.log("MongoDB sync:", err); });
-    } catch (e) {
-      console.log("MongoDB sync error:", e);
+      var row = {
+        client_name: data.clientName || 'N/A',
+        business_name: data.businessName || 'N/A',
+        tagline: data.tagline || 'N/A',
+        industry: data.industry || 'N/A',
+        email: data.email || 'N/A',
+        phone: data.phone || 'N/A',
+        objectives: Array.isArray(data.objectives) ? data.objectives.join(', ') : (data.objectives || 'N/A'),
+        objectives_detail: data.objectivesDetail || 'N/A',
+        audience: data.audience || 'N/A',
+        competitor1_url: data.competitor1_url || '',
+        competitor1_notes: data.competitor1_notes || '',
+        competitor2_url: data.competitor2_url || '',
+        competitor2_notes: data.competitor2_notes || '',
+        competitor3_url: data.competitor3_url || '',
+        competitor3_notes: data.competitor3_notes || '',
+        visual_style: data.visualStyle || 'N/A',
+        brand_logo: data.brand_logo || 'N/A',
+        brand_guidelines: data.brand_guidelines || 'N/A',
+        brand_colors: data.brand_colors || 'N/A',
+        brand_fonts: data.brand_fonts || 'N/A',
+        inspiration1_url: data.inspiration1_url || '',
+        inspiration1_notes: data.inspiration1_notes || '',
+        inspiration2_url: data.inspiration2_url || '',
+        inspiration2_notes: data.inspiration2_notes || '',
+        inspiration3_url: data.inspiration3_url || '',
+        inspiration3_notes: data.inspiration3_notes || '',
+        pages: Array.isArray(data.pages) ? data.pages.join(', ') : (data.pages || 'N/A'),
+        custom_pages: data.customPages || 'N/A',
+        content_ready: data.contentReady || 'N/A',
+        media_link: data.mediaLink || 'N/A',
+        domain_status: data.domainStatus || 'N/A',
+        domain_name: data.domainName || 'N/A',
+        hosting_status: data.hostingStatus || 'N/A',
+        features: Array.isArray(data.features) ? data.features.join(', ') : (data.features || 'N/A'),
+        target_date: data.targetDate || 'N/A',
+        notes: data.notes || 'N/A'
+      };
+
+      const { error } = await supabaseClient.from('briefs').insert([row]);
+      if (error) console.error('Supabase Error:', error);
+    } catch (err) {
+      console.error('Supabase Send Error:', err);
     }
   }
 

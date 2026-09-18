@@ -6,6 +6,7 @@
 <title>Siyantra — Developer Brief Management Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --ink: #1E2A2E;
@@ -166,9 +167,69 @@
 </div>
 
 <script>
-var allBriefs = [];
+var SUPABASE_URL = "";
+var SUPABASE_ANON_KEY = "";
+var supabaseClient = null;
+
+if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
 
 async function fetchBriefs() {
+  if (supabaseClient) {
+    try {
+      const { data, error } = await supabaseClient.from('briefs').select('*').order('created_at', { ascending: false });
+      if (!error && data) {
+        allBriefs = data.map(function(b){
+          return {
+            _id: b.id,
+            refId: b.ref_id,
+            status: b.status,
+            clientName: b.client_name,
+            businessName: b.business_name,
+            tagline: b.tagline,
+            industry: b.industry,
+            email: b.email,
+            phone: b.phone,
+            objectives: b.objectives,
+            objectivesDetail: b.objectives_detail,
+            audience: b.audience,
+            competitor1_url: b.competitor1_url,
+            competitor1_notes: b.competitor1_notes,
+            competitor2_url: b.competitor2_url,
+            competitor2_notes: b.competitor2_notes,
+            competitor3_url: b.competitor3_url,
+            competitor3_notes: b.competitor3_notes,
+            visualStyle: b.visual_style,
+            brand_logo: b.brand_logo,
+            brand_guidelines: b.brand_guidelines,
+            brand_colors: b.brand_colors,
+            brand_fonts: b.brand_fonts,
+            inspiration1_url: b.inspiration1_url,
+            inspiration1_notes: b.inspiration1_notes,
+            inspiration2_url: b.inspiration2_url,
+            inspiration2_notes: b.inspiration2_notes,
+            inspiration3_url: b.inspiration3_url,
+            inspiration3_notes: b.inspiration3_notes,
+            pages: b.pages,
+            customPages: b.custom_pages,
+            contentReady: b.content_ready,
+            mediaLink: b.media_link,
+            domainStatus: b.domain_status,
+            domainName: b.domain_name,
+            hostingStatus: b.hosting_status,
+            features: b.features,
+            targetDate: b.target_date,
+            notes: b.notes,
+            createdAt: b.created_at
+          };
+        });
+        renderBriefs(allBriefs);
+        return;
+      }
+    } catch (e) { console.error(e); }
+  }
+
   try {
     var res = await fetch('/api/briefs');
     var data = await res.json();
@@ -176,10 +237,10 @@ async function fetchBriefs() {
       allBriefs = data.briefs;
       renderBriefs(allBriefs);
     } else {
-      document.getElementById('briefsTableBody').innerHTML = '<tr><td colspan="8" class="empty-state">Failed to load briefs from MongoDB API.</td></tr>';
+      document.getElementById('briefsTableBody').innerHTML = '<tr><td colspan="8" class="empty-state">Failed to load briefs.</td></tr>';
     }
   } catch (err) {
-    document.getElementById('briefsTableBody').innerHTML = '<tr><td colspan="8" class="empty-state">Could not connect to MongoDB backend server. Please run <code>npm start</code> or <code>node server.js</code>.</td></tr>';
+    document.getElementById('briefsTableBody').innerHTML = '<tr><td colspan="8" class="empty-state">Could not load database. Please set SUPABASE_URL and SUPABASE_ANON_KEY in admin.html.</td></tr>';
   }
 }
 
