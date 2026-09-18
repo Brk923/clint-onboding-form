@@ -197,7 +197,7 @@
   <div class="header">
     <div>
       <h1>Siyantra — Brief Management Portal</h1>
-      <p>MongoDB Database Submissions & PDF Generator</p>
+      <p>Supabase Database Submissions</p>
     </div>
     <button type="button" class="btn" onclick="fetchBriefs()">🔄 Refresh Submissions</button>
   </div>
@@ -206,7 +206,7 @@
     <div class="controls">
       <input type="text" class="search-box" id="searchInput" placeholder="Search by client or business name..."
         onkeyup="filterBriefs()">
-      <div style="font-size:13.5px; color:var(--ink-soft);" id="counterText">Loading briefs from MongoDB...</div>
+      <div style="font-size:13.5px; color:var(--ink-soft);" id="counterText">Loading briefs...</div>
     </div>
 
     <div class="table-card">
@@ -225,7 +225,7 @@
         </thead>
         <tbody id="briefsTableBody">
           <tr>
-            <td colspan="8" class="empty-state">Connecting to MongoDB...</td>
+            <td colspan="8" class="empty-state">Connecting to database...</td>
           </tr>
         </tbody>
       </table>
@@ -312,10 +312,10 @@
 
     function renderBriefs(briefs) {
       var tbody = document.getElementById('briefsTableBody');
-      document.getElementById('counterText').textContent = 'Total Briefs in MongoDB: ' + briefs.length;
+      document.getElementById('counterText').textContent = 'Total Briefs: ' + briefs.length;
 
       if (!briefs.length) {
-        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No client briefs found in MongoDB database yet.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No client briefs found in database yet.</td></tr>';
         return;
       }
 
@@ -331,8 +331,7 @@
           '<td><span class="badge badge-' + (b.status || 'New') + '">' + (b.status || 'New') + '</span></td>' +
           '<td>' +
           '<div class="actions">' +
-          '<button class="btn-sm pdf-btn" onclick="generatePdfForBrief(\'' + b._id + '\')">📄 Download PDF</button>' +
-          '<button class="btn-sm" onclick="deleteBrief(\'' + b._id + '\')">🗑️</button>' +
+          '<button class="btn-sm" onclick="deleteBrief(\'' + b._id + '\')">🗑️ Delete</button>' +
           '</div>' +
           '</td>' +
           '</tr>';
@@ -360,104 +359,23 @@
       return String(arr);
     }
 
-    function generatePdfForBrief(id) {
-      var b = allBriefs.find(function (x) { return x._id === id; });
-      if (!b) return;
-
-      var bizName = b.businessName !== 'N/A' ? b.businessName : (b.clientName !== 'N/A' ? b.clientName : 'Client');
-      var dateStr = new Date(b.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-      var refId = b.refId || 'SY-' + Math.floor(100000 + Math.random() * 900000);
-
-      var container = document.createElement('div');
-      container.style.padding = '26px 30px';
-      container.style.fontFamily = "'Inter', sans-serif";
-      container.style.color = '#1E2A2E';
-      container.style.background = '#FFFFFF';
-      container.style.lineHeight = '1.5';
-
-      container.innerHTML =
-        '<div style="border-bottom:2px solid #4F46E5; padding-bottom:12px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:flex-end;">' +
-        '<div>' +
-        '<h1 style="font-family:\'Fraunces\', serif; font-size:24px; margin:0; color:#1E2A2E;">Siyantra</h1>' +
-        '<div style="font-size:13px; color:#5B6668; margin-top:2px;">Project Discovery Brief &bull; Full Specifications</div>' +
-        '</div>' +
-        '<div style="text-align:right; font-size:12px; color:#5B6668;">' +
-        '<div><strong>Ref:</strong> ' + refId + '</div>' +
-        '<div><strong>Date:</strong> ' + dateStr + '</div>' +
-        '</div>' +
-        '</div>' +
-
-        '<div style="margin-bottom:16px;">' +
-        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">1. Client & Business Overview</h2>' +
-        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
-        '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Client Name:</td><td><strong>' + (b.clientName || 'N/A') + '</strong></td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Business Name:</td><td><strong>' + (b.businessName || 'N/A') + '</strong></td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Tagline:</td><td>' + (b.tagline || 'N/A') + '</td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Industry / Sector:</td><td>' + (b.industry || 'N/A') + '</td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Contact Email:</td><td><strong>' + (b.email || 'N/A') + '</strong></td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Contact Phone:</td><td>' + (b.phone || 'N/A') + '</td></tr>' +
-        '</table>' +
-        '</div>' +
-
-        '<div style="margin-bottom:16px;">' +
-        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">2. Business Goals & Audience</h2>' +
-        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
-        '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Core Objectives:</td><td><strong>' + formatArr(b.objectives) + '</strong></td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Goals Detail:</td><td>' + (b.objectivesDetail || 'N/A') + '</td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Target Audience:</td><td>' + (b.audience || 'N/A') + '</td></tr>' +
-        '</table>' +
-        '</div>' +
-
-        '<div style="margin-bottom:16px;">' +
-        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">3. Branding & Design Direction</h2>' +
-        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
-        '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Visual Style Selected:</td><td><span style="background:#EEECFD; color:#4F46E5; padding:2px 8px; border-radius:4px; font-weight:600;">' + (b.visualStyle || 'N/A') + '</span></td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Logo Files:</td><td>' + (b.brand_logo || 'N/A') + '</td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Brand Guidelines:</td><td>' + (b.brand_guidelines || 'N/A') + '</td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Color Palette:</td><td>' + (b.brand_colors || 'N/A') + '</td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Font Files:</td><td>' + (b.brand_fonts || 'N/A') + '</td></tr>' +
-        '</table>' +
-        '</div>' +
-
-        '<div style="margin-bottom:16px;">' +
-        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">4. Pages & Content</h2>' +
-        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
-        '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Pages Required:</td><td><strong>' + formatArr(b.pages) + '</strong></td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Other / Custom Pages:</td><td>' + (b.customPages || 'N/A') + '</td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Content Readiness:</td><td>' + (b.contentReady || 'N/A') + '</td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Media Link:</td><td>' + (b.mediaLink || 'N/A') + '</td></tr>' +
-        '</table>' +
-        '</div>' +
-
-        '<div style="margin-bottom:16px;">' +
-        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">5. Technical Setup & Timeline</h2>' +
-        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
-        '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Domain Status:</td><td>' + (b.domainStatus || 'N/A') + '</td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Domain Name:</td><td>' + (b.domainName || 'N/A') + '</td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Hosting Status:</td><td>' + (b.hostingStatus || 'N/A') + '</td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Required Features:</td><td><strong>' + formatArr(b.features) + '</strong></td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Target Completion Date:</td><td>' + (b.targetDate || 'N/A') + '</td></tr>' +
-        '<tr><td style="padding:3px 0; color:#5B6668;">Notes / Budget:</td><td>' + (b.notes || 'N/A') + '</td></tr>' +
-        '</table>' +
-        '</div>' +
-
-        '<div style="margin-top:20px; border-top:1px solid #E1E1DD; padding-top:8px; font-size:11px; color:#5B6668; text-align:center;">' +
-        'Siyantra Brief Portal &bull; MongoDB Document' +
-        '</div>';
-
-      var opt = {
-        margin: [10, 10, 10, 10],
-        filename: (bizName.replace(/[^a-z0-9]/gi, '_')) + '_Brief.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(container).save();
-    }
-
     async function deleteBrief(id) {
-      if (!confirm('Delete this brief from MongoDB database?')) return;
+      if (!confirm('Are you sure you want to delete this brief submission?')) return;
+      if (supabaseClient) {
+        try {
+          const { error } = await supabaseClient.from('briefs').delete().eq('id', id);
+          if (!error) {
+            fetchBriefs();
+            return;
+          } else {
+            console.error('Supabase Delete Error:', error);
+            alert('Failed to delete brief: ' + (error.message || 'Unknown error'));
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
       try {
         var res = await fetch('/api/briefs/' + id, { method: 'DELETE' });
         var data = await res.json();
