@@ -1,407 +1,474 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Siyantra — Developer Brief Management Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-  :root {
-    --ink: #1E2A2E;
-    --ink-soft: #5B6668;
-    --paper: #F8FAF9;
-    --panel: #FFFFFF;
-    --line: #E1E1DD;
-    --brass: #4F46E5;
-    --brass-soft: #EEECFD;
-    --success: #16A34A;
-    --warning: #D97706;
-  }
-  * { box-sizing: border-box; }
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-  }
-  .header {
-    background: #fff;
-    border-bottom: 1px solid var(--line);
-    padding: 20px 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .header h1 { font-family: 'Fraunces', serif; font-size: 22px; margin: 0; }
-  .header p { color: var(--ink-soft); font-size: 13.5px; margin: 2px 0 0; }
-  
-  .wrap { max-width: 1200px; margin: 30px auto; padding: 0 24px; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Siyantra — Developer Brief Management Portal</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --ink: #1E2A2E;
+      --ink-soft: #5B6668;
+      --paper: #F8FAF9;
+      --panel: #FFFFFF;
+      --line: #E1E1DD;
+      --brass: #4F46E5;
+      --brass-soft: #EEECFD;
+      --success: #16A34A;
+      --warning: #D97706;
+    }
 
-  .controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .search-box {
-    padding: 8px 14px;
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    font-size: 14px;
-    width: 280px;
-  }
-  .btn {
-    background: var(--brass);
-    color: white;
-    border: none;
-    padding: 9px 16px;
-    border-radius: 4px;
-    font-size: 13.5px;
-    font-weight: 500;
-    cursor: pointer;
-  }
-  .btn:hover { opacity: 0.9; }
+    * {
+      box-sizing: border-box;
+    }
 
-  .table-card {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13.5px;
-  }
-  th {
-    background: #F1F3F2;
-    text-align: left;
-    padding: 12px 16px;
-    font-weight: 600;
-    color: var(--ink-soft);
-    border-bottom: 1px solid var(--line);
-  }
-  td {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--line);
-    vertical-align: middle;
-  }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: #FAFBFB; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
 
-  .badge {
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
-  }
-  .badge-New { background: #EEECFD; color: #4F46E5; }
-  .badge-Review { background: #FEF3C7; color: #D97706; }
-  .badge-Building { background: #E0F2FE; color: #0284C7; }
-  .badge-Completed { background: #DCFCE7; color: #16A34A; }
+    .header {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      padding: 20px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-  .actions { display: flex; gap: 8px; }
-  .btn-sm {
-    padding: 5px 10px;
-    font-size: 12.5px;
-    border-radius: 3px;
-    border: 1px solid var(--line);
-    background: #fff;
-    cursor: pointer;
-  }
-  .btn-sm.pdf-btn { background: var(--brass); color: #fff; border-color: var(--brass); }
-  .btn-sm:hover { opacity: 0.85; }
+    .header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      margin: 0;
+    }
 
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--ink-soft);
-  }
-</style>
+    .header p {
+      color: var(--ink-soft);
+      font-size: 13.5px;
+      margin: 2px 0 0;
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 24px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      font-size: 14px;
+      width: 280px;
+    }
+
+    .btn {
+      background: var(--brass);
+      color: white;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 4px;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .table-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    th {
+      background: #F1F3F2;
+      text-align: left;
+      padding: 12px 16px;
+      font-weight: 600;
+      color: var(--ink-soft);
+      border-bottom: 1px solid var(--line);
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #FAFBFB;
+    }
+
+    .badge {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .badge-New {
+      background: #EEECFD;
+      color: #4F46E5;
+    }
+
+    .badge-Review {
+      background: #FEF3C7;
+      color: #D97706;
+    }
+
+    .badge-Building {
+      background: #E0F2FE;
+      color: #0284C7;
+    }
+
+    .badge-Completed {
+      background: #DCFCE7;
+      color: #16A34A;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12.5px;
+      border-radius: 3px;
+      border: 1px solid var(--line);
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .btn-sm.pdf-btn {
+      background: var(--brass);
+      color: #fff;
+      border-color: var(--brass);
+    }
+
+    .btn-sm:hover {
+      opacity: 0.85;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--ink-soft);
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="header">
-  <div>
-    <h1>Siyantra — Brief Management Portal</h1>
-    <p>MongoDB Database Submissions & PDF Generator</p>
-  </div>
-  <button type="button" class="btn" onclick="fetchBriefs()">🔄 Refresh Submissions</button>
-</div>
-
-<div class="wrap">
-  <div class="controls">
-    <input type="text" class="search-box" id="searchInput" placeholder="Search by client or business name..." onkeyup="filterBriefs()">
-    <div style="font-size:13.5px; color:var(--ink-soft);" id="counterText">Loading briefs from MongoDB...</div>
+  <div class="header">
+    <div>
+      <h1>Siyantra — Brief Management Portal</h1>
+      <p>MongoDB Database Submissions & PDF Generator</p>
+    </div>
+    <button type="button" class="btn" onclick="fetchBriefs()">🔄 Refresh Submissions</button>
   </div>
 
-  <div class="table-card">
-    <table>
-      <thead>
-        <tr>
-          <th>Ref ID</th>
-          <th>Client Name</th>
-          <th>Business Name</th>
-          <th>Contact</th>
-          <th>Visual Style</th>
-          <th>Submitted Date</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="briefsTableBody">
-        <tr>
-          <td colspan="8" class="empty-state">Connecting to MongoDB...</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="wrap">
+    <div class="controls">
+      <input type="text" class="search-box" id="searchInput" placeholder="Search by client or business name..."
+        onkeyup="filterBriefs()">
+      <div style="font-size:13.5px; color:var(--ink-soft);" id="counterText">Loading briefs from MongoDB...</div>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Ref ID</th>
+            <th>Client Name</th>
+            <th>Business Name</th>
+            <th>Contact</th>
+            <th>Visual Style</th>
+            <th>Submitted Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="briefsTableBody">
+          <tr>
+            <td colspan="8" class="empty-state">Connecting to MongoDB...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<script>
-var SUPABASE_URL = "";
-var SUPABASE_ANON_KEY = "";
-var supabaseClient = null;
+  <script>
+    var SUPABASE_URL = "https://czcdsleblkdncyurozpm.supabase.co";
+    var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6Y2RzbGVibGtkbmN5dXJvenBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3NTA2ODIsImV4cCI6MjEwNTMyNjY4Mn0.-4cRKUYYInKhC8fMQW4hAQzoIBdxHmuHbAryAtaiQWI ";
+    var supabaseClient = null;
 
-if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
-  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
+    if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
 
-async function fetchBriefs() {
-  if (supabaseClient) {
-    try {
-      const { data, error } = await supabaseClient.from('briefs').select('*').order('created_at', { ascending: false });
-      if (!error && data) {
-        allBriefs = data.map(function(b){
-          return {
-            _id: b.id,
-            refId: b.ref_id,
-            status: b.status,
-            clientName: b.client_name,
-            businessName: b.business_name,
-            tagline: b.tagline,
-            industry: b.industry,
-            email: b.email,
-            phone: b.phone,
-            objectives: b.objectives,
-            objectivesDetail: b.objectives_detail,
-            audience: b.audience,
-            competitor1_url: b.competitor1_url,
-            competitor1_notes: b.competitor1_notes,
-            competitor2_url: b.competitor2_url,
-            competitor2_notes: b.competitor2_notes,
-            competitor3_url: b.competitor3_url,
-            competitor3_notes: b.competitor3_notes,
-            visualStyle: b.visual_style,
-            brand_logo: b.brand_logo,
-            brand_guidelines: b.brand_guidelines,
-            brand_colors: b.brand_colors,
-            brand_fonts: b.brand_fonts,
-            inspiration1_url: b.inspiration1_url,
-            inspiration1_notes: b.inspiration1_notes,
-            inspiration2_url: b.inspiration2_url,
-            inspiration2_notes: b.inspiration2_notes,
-            inspiration3_url: b.inspiration3_url,
-            inspiration3_notes: b.inspiration3_notes,
-            pages: b.pages,
-            customPages: b.custom_pages,
-            contentReady: b.content_ready,
-            mediaLink: b.media_link,
-            domainStatus: b.domain_status,
-            domainName: b.domain_name,
-            hostingStatus: b.hosting_status,
-            features: b.features,
-            targetDate: b.target_date,
-            notes: b.notes,
-            createdAt: b.created_at
-          };
-        });
-        renderBriefs(allBriefs);
+    async function fetchBriefs() {
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient.from('briefs').select('*').order('created_at', { ascending: false });
+          if (!error && data) {
+            allBriefs = data.map(function (b) {
+              return {
+                _id: b.id,
+                refId: b.ref_id,
+                status: b.status,
+                clientName: b.client_name,
+                businessName: b.business_name,
+                tagline: b.tagline,
+                industry: b.industry,
+                email: b.email,
+                phone: b.phone,
+                objectives: b.objectives,
+                objectivesDetail: b.objectives_detail,
+                audience: b.audience,
+                competitor1_url: b.competitor1_url,
+                competitor1_notes: b.competitor1_notes,
+                competitor2_url: b.competitor2_url,
+                competitor2_notes: b.competitor2_notes,
+                competitor3_url: b.competitor3_url,
+                competitor3_notes: b.competitor3_notes,
+                visualStyle: b.visual_style,
+                brand_logo: b.brand_logo,
+                brand_guidelines: b.brand_guidelines,
+                brand_colors: b.brand_colors,
+                brand_fonts: b.brand_fonts,
+                inspiration1_url: b.inspiration1_url,
+                inspiration1_notes: b.inspiration1_notes,
+                inspiration2_url: b.inspiration2_url,
+                inspiration2_notes: b.inspiration2_notes,
+                inspiration3_url: b.inspiration3_url,
+                inspiration3_notes: b.inspiration3_notes,
+                pages: b.pages,
+                customPages: b.custom_pages,
+                contentReady: b.content_ready,
+                mediaLink: b.media_link,
+                domainStatus: b.domain_status,
+                domainName: b.domain_name,
+                hostingStatus: b.hosting_status,
+                features: b.features,
+                targetDate: b.target_date,
+                notes: b.notes,
+                createdAt: b.created_at
+              };
+            });
+            renderBriefs(allBriefs);
+            return;
+          }
+        } catch (e) { console.error(e); }
+      }
+
+      try {
+        var res = await fetch('/api/briefs');
+        var data = await res.json();
+        if (data.success) {
+          allBriefs = data.briefs;
+          renderBriefs(allBriefs);
+        } else {
+          document.getElementById('briefsTableBody').innerHTML = '<tr><td colspan="8" class="empty-state">Failed to load briefs.</td></tr>';
+        }
+      } catch (err) {
+        document.getElementById('briefsTableBody').innerHTML = '<tr><td colspan="8" class="empty-state">Could not load database. Please set SUPABASE_URL and SUPABASE_ANON_KEY in admin.html.</td></tr>';
+      }
+    }
+
+    function renderBriefs(briefs) {
+      var tbody = document.getElementById('briefsTableBody');
+      document.getElementById('counterText').textContent = 'Total Briefs in MongoDB: ' + briefs.length;
+
+      if (!briefs.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No client briefs found in MongoDB database yet.</td></tr>';
         return;
       }
-    } catch (e) { console.error(e); }
-  }
 
-  try {
-    var res = await fetch('/api/briefs');
-    var data = await res.json();
-    if (data.success) {
-      allBriefs = data.briefs;
-      renderBriefs(allBriefs);
-    } else {
-      document.getElementById('briefsTableBody').innerHTML = '<tr><td colspan="8" class="empty-state">Failed to load briefs.</td></tr>';
-    }
-  } catch (err) {
-    document.getElementById('briefsTableBody').innerHTML = '<tr><td colspan="8" class="empty-state">Could not load database. Please set SUPABASE_URL and SUPABASE_ANON_KEY in admin.html.</td></tr>';
-  }
-}
-
-function renderBriefs(briefs) {
-  var tbody = document.getElementById('briefsTableBody');
-  document.getElementById('counterText').textContent = 'Total Briefs in MongoDB: ' + briefs.length;
-
-  if (!briefs.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No client briefs found in MongoDB database yet.</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = briefs.map(function(b){
-    var dateStr = new Date(b.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    return '<tr>' +
-      '<td><strong>' + (b.refId || 'SY-000000') + '</strong></td>' +
-      '<td>' + escapeHtml(b.clientName) + '</td>' +
-      '<td><strong>' + escapeHtml(b.businessName) + '</strong></td>' +
-      '<td>' + escapeHtml(b.email) + '<br><small style="color:#5B6668">' + escapeHtml(b.phone) + '</small></td>' +
-      '<td><span class="badge badge-New">' + escapeHtml(b.visualStyle) + '</span></td>' +
-      '<td>' + dateStr + '</td>' +
-      '<td><span class="badge badge-' + (b.status || 'New') + '">' + (b.status || 'New') + '</span></td>' +
-      '<td>' +
-        '<div class="actions">' +
+      tbody.innerHTML = briefs.map(function (b) {
+        var dateStr = new Date(b.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        return '<tr>' +
+          '<td><strong>' + (b.refId || 'SY-000000') + '</strong></td>' +
+          '<td>' + escapeHtml(b.clientName) + '</td>' +
+          '<td><strong>' + escapeHtml(b.businessName) + '</strong></td>' +
+          '<td>' + escapeHtml(b.email) + '<br><small style="color:#5B6668">' + escapeHtml(b.phone) + '</small></td>' +
+          '<td><span class="badge badge-New">' + escapeHtml(b.visualStyle) + '</span></td>' +
+          '<td>' + dateStr + '</td>' +
+          '<td><span class="badge badge-' + (b.status || 'New') + '">' + (b.status || 'New') + '</span></td>' +
+          '<td>' +
+          '<div class="actions">' +
           '<button class="btn-sm pdf-btn" onclick="generatePdfForBrief(\'' + b._id + '\')">📄 Download PDF</button>' +
           '<button class="btn-sm" onclick="deleteBrief(\'' + b._id + '\')">🗑️</button>' +
-        '</div>' +
-      '</td>' +
-    '</tr>';
-  }).join('');
-}
+          '</div>' +
+          '</td>' +
+          '</tr>';
+      }).join('');
+    }
 
-function filterBriefs() {
-  var q = document.getElementById('searchInput').value.toLowerCase();
-  var filtered = allBriefs.filter(function(b){
-    return (b.clientName && b.clientName.toLowerCase().indexOf(q) !== -1) ||
-           (b.businessName && b.businessName.toLowerCase().indexOf(q) !== -1) ||
-           (b.email && b.email.toLowerCase().indexOf(q) !== -1);
-  });
-  renderBriefs(filtered);
-}
+    function filterBriefs() {
+      var q = document.getElementById('searchInput').value.toLowerCase();
+      var filtered = allBriefs.filter(function (b) {
+        return (b.clientName && b.clientName.toLowerCase().indexOf(q) !== -1) ||
+          (b.businessName && b.businessName.toLowerCase().indexOf(q) !== -1) ||
+          (b.email && b.email.toLowerCase().indexOf(q) !== -1);
+      });
+      renderBriefs(filtered);
+    }
 
-function escapeHtml(str) {
-  if (!str || str === 'N/A') return '<span style="color:#A0AAB0">N/A</span>';
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
+    function escapeHtml(str) {
+      if (!str || str === 'N/A') return '<span style="color:#A0AAB0">N/A</span>';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
 
-function formatArr(arr) {
-  if (!arr || arr === 'N/A') return '<span style="color:#A0AAB0">N/A</span>';
-  if (Array.isArray(arr)) return arr.join(', ');
-  return String(arr);
-}
+    function formatArr(arr) {
+      if (!arr || arr === 'N/A') return '<span style="color:#A0AAB0">N/A</span>';
+      if (Array.isArray(arr)) return arr.join(', ');
+      return String(arr);
+    }
 
-function generatePdfForBrief(id) {
-  var b = allBriefs.find(function(x){ return x._id === id; });
-  if (!b) return;
+    function generatePdfForBrief(id) {
+      var b = allBriefs.find(function (x) { return x._id === id; });
+      if (!b) return;
 
-  var bizName = b.businessName !== 'N/A' ? b.businessName : (b.clientName !== 'N/A' ? b.clientName : 'Client');
-  var dateStr = new Date(b.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  var refId = b.refId || 'SY-' + Math.floor(100000 + Math.random() * 900000);
+      var bizName = b.businessName !== 'N/A' ? b.businessName : (b.clientName !== 'N/A' ? b.clientName : 'Client');
+      var dateStr = new Date(b.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      var refId = b.refId || 'SY-' + Math.floor(100000 + Math.random() * 900000);
 
-  var container = document.createElement('div');
-  container.style.padding = '26px 30px';
-  container.style.fontFamily = "'Inter', sans-serif";
-  container.style.color = '#1E2A2E';
-  container.style.background = '#FFFFFF';
-  container.style.lineHeight = '1.5';
+      var container = document.createElement('div');
+      container.style.padding = '26px 30px';
+      container.style.fontFamily = "'Inter', sans-serif";
+      container.style.color = '#1E2A2E';
+      container.style.background = '#FFFFFF';
+      container.style.lineHeight = '1.5';
 
-  container.innerHTML =
-    '<div style="border-bottom:2px solid #4F46E5; padding-bottom:12px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:flex-end;">' +
-      '<div>' +
+      container.innerHTML =
+        '<div style="border-bottom:2px solid #4F46E5; padding-bottom:12px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:flex-end;">' +
+        '<div>' +
         '<h1 style="font-family:\'Fraunces\', serif; font-size:24px; margin:0; color:#1E2A2E;">Siyantra</h1>' +
         '<div style="font-size:13px; color:#5B6668; margin-top:2px;">Project Discovery Brief &bull; Full Specifications</div>' +
-      '</div>' +
-      '<div style="text-align:right; font-size:12px; color:#5B6668;">' +
+        '</div>' +
+        '<div style="text-align:right; font-size:12px; color:#5B6668;">' +
         '<div><strong>Ref:</strong> ' + refId + '</div>' +
         '<div><strong>Date:</strong> ' + dateStr + '</div>' +
-      '</div>' +
-    '</div>' +
+        '</div>' +
+        '</div>' +
 
-    '<div style="margin-bottom:16px;">' +
-      '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">1. Client & Business Overview</h2>' +
-      '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
+        '<div style="margin-bottom:16px;">' +
+        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">1. Client & Business Overview</h2>' +
+        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
         '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Client Name:</td><td><strong>' + (b.clientName || 'N/A') + '</strong></td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Business Name:</td><td><strong>' + (b.businessName || 'N/A') + '</strong></td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Tagline:</td><td>' + (b.tagline || 'N/A') + '</td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Industry / Sector:</td><td>' + (b.industry || 'N/A') + '</td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Contact Email:</td><td><strong>' + (b.email || 'N/A') + '</strong></td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Contact Phone:</td><td>' + (b.phone || 'N/A') + '</td></tr>' +
-      '</table>' +
-    '</div>' +
+        '</table>' +
+        '</div>' +
 
-    '<div style="margin-bottom:16px;">' +
-      '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">2. Business Goals & Audience</h2>' +
-      '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
+        '<div style="margin-bottom:16px;">' +
+        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">2. Business Goals & Audience</h2>' +
+        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
         '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Core Objectives:</td><td><strong>' + formatArr(b.objectives) + '</strong></td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Goals Detail:</td><td>' + (b.objectivesDetail || 'N/A') + '</td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Target Audience:</td><td>' + (b.audience || 'N/A') + '</td></tr>' +
-      '</table>' +
-    '</div>' +
+        '</table>' +
+        '</div>' +
 
-    '<div style="margin-bottom:16px;">' +
-      '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">3. Branding & Design Direction</h2>' +
-      '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
+        '<div style="margin-bottom:16px;">' +
+        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">3. Branding & Design Direction</h2>' +
+        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
         '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Visual Style Selected:</td><td><span style="background:#EEECFD; color:#4F46E5; padding:2px 8px; border-radius:4px; font-weight:600;">' + (b.visualStyle || 'N/A') + '</span></td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Logo Files:</td><td>' + (b.brand_logo || 'N/A') + '</td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Brand Guidelines:</td><td>' + (b.brand_guidelines || 'N/A') + '</td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Color Palette:</td><td>' + (b.brand_colors || 'N/A') + '</td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Font Files:</td><td>' + (b.brand_fonts || 'N/A') + '</td></tr>' +
-      '</table>' +
-    '</div>' +
+        '</table>' +
+        '</div>' +
 
-    '<div style="margin-bottom:16px;">' +
-      '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">4. Pages & Content</h2>' +
-      '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
+        '<div style="margin-bottom:16px;">' +
+        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">4. Pages & Content</h2>' +
+        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
         '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Pages Required:</td><td><strong>' + formatArr(b.pages) + '</strong></td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Other / Custom Pages:</td><td>' + (b.customPages || 'N/A') + '</td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Content Readiness:</td><td>' + (b.contentReady || 'N/A') + '</td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Media Link:</td><td>' + (b.mediaLink || 'N/A') + '</td></tr>' +
-      '</table>' +
-    '</div>' +
+        '</table>' +
+        '</div>' +
 
-    '<div style="margin-bottom:16px;">' +
-      '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">5. Technical Setup & Timeline</h2>' +
-      '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
+        '<div style="margin-bottom:16px;">' +
+        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">5. Technical Setup & Timeline</h2>' +
+        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
         '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Domain Status:</td><td>' + (b.domainStatus || 'N/A') + '</td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Domain Name:</td><td>' + (b.domainName || 'N/A') + '</td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Hosting Status:</td><td>' + (b.hostingStatus || 'N/A') + '</td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Required Features:</td><td><strong>' + formatArr(b.features) + '</strong></td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Target Completion Date:</td><td>' + (b.targetDate || 'N/A') + '</td></tr>' +
         '<tr><td style="padding:3px 0; color:#5B6668;">Notes / Budget:</td><td>' + (b.notes || 'N/A') + '</td></tr>' +
-      '</table>' +
-    '</div>' +
+        '</table>' +
+        '</div>' +
 
-    '<div style="margin-top:20px; border-top:1px solid #E1E1DD; padding-top:8px; font-size:11px; color:#5B6668; text-align:center;">' +
-      'Siyantra Brief Portal &bull; MongoDB Document' +
-    '</div>';
+        '<div style="margin-top:20px; border-top:1px solid #E1E1DD; padding-top:8px; font-size:11px; color:#5B6668; text-align:center;">' +
+        'Siyantra Brief Portal &bull; MongoDB Document' +
+        '</div>';
 
-  var opt = {
-    margin: [10, 10, 10, 10],
-    filename: (bizName.replace(/[^a-z0-9]/gi, '_')) + '_Brief.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
+      var opt = {
+        margin: [10, 10, 10, 10],
+        filename: (bizName.replace(/[^a-z0-9]/gi, '_')) + '_Brief.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
 
-  html2pdf().set(opt).from(container).save();
-}
+      html2pdf().set(opt).from(container).save();
+    }
 
-async function deleteBrief(id) {
-  if (!confirm('Delete this brief from MongoDB database?')) return;
-  try {
-    var res = await fetch('/api/briefs/' + id, { method: 'DELETE' });
-    var data = await res.json();
-    if (data.success) fetchBriefs();
-  } catch (err) {
-    alert('Could not delete brief.');
-  }
-}
+    async function deleteBrief(id) {
+      if (!confirm('Delete this brief from MongoDB database?')) return;
+      try {
+        var res = await fetch('/api/briefs/' + id, { method: 'DELETE' });
+        var data = await res.json();
+        if (data.success) fetchBriefs();
+      } catch (err) {
+        alert('Could not delete brief.');
+      }
+    }
 
-fetchBriefs();
-</script>
+    fetchBriefs();
+  </script>
 </body>
+
 </html>

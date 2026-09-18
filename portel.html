@@ -1,33 +1,52 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Project Discovery Portal — Siyantra</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-  :root {
-    --ink: #1E2A2E;
-    --ink-soft: #5B6668;
-    --paper: #FFFFFF;
-    --panel: #FFFFFF;
-    --line: #E1E1DD;
-    --line-soft: #ECECE8;
-    --brass: #4F46E5;
-    --brass-soft: #EEECFD;
-    --teal: #4F46E5;
-    --teal-soft: #EEECFD;
-    --error: #A3402E;
-    --focus: #4F46E5;
-    font-family: 'Inter', sans-serif;
-  }
 
-  :root:not([data-theme="light"]) {
-    @media (prefers-color-scheme: dark) {
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Discovery Portal — Siyantra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --ink: #1E2A2E;
+      --ink-soft: #5B6668;
+      --paper: #FFFFFF;
+      --panel: #FFFFFF;
+      --line: #E1E1DD;
+      --line-soft: #ECECE8;
+      --brass: #4F46E5;
+      --brass-soft: #EEECFD;
+      --teal: #4F46E5;
+      --teal-soft: #EEECFD;
+      --error: #A3402E;
+      --focus: #4F46E5;
+      font-family: 'Inter', sans-serif;
+    }
+
+    :root:not([data-theme="light"]) {
+      @media (prefers-color-scheme: dark) {
+        --ink: #1E2A2E;
+        --ink-soft: #5B6668;
+        --paper: #FFFFFF;
+        --panel: #FFFFFF;
+        --line: #E1E1DD;
+        --line-soft: #ECECE8;
+        --brass: #4F46E5;
+        --brass-soft: #EEECFD;
+        --teal: #4F46E5;
+        --teal-soft: #EEECFD;
+        --error: #A3402E;
+        --focus: #4F46E5;
+      }
+    }
+
+    :root[data-theme="dark"] {
       --ink: #1E2A2E;
       --ink-soft: #5B6668;
       --paper: #FFFFFF;
@@ -41,1079 +60,1380 @@
       --error: #A3402E;
       --focus: #4F46E5;
     }
-  }
 
-  :root[data-theme="dark"] {
-    --ink: #1E2A2E;
-    --ink-soft: #5B6668;
-    --paper: #FFFFFF;
-    --panel: #FFFFFF;
-    --line: #E1E1DD;
-    --line-soft: #ECECE8;
-    --brass: #4F46E5;
-    --brass-soft: #EEECFD;
-    --teal: #4F46E5;
-    --teal-soft: #EEECFD;
-    --error: #A3402E;
-    --focus: #4F46E5;
-  }
+    * {
+      box-sizing: border-box;
+    }
 
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'Inter', sans-serif;
-    line-height: 1.5;
-    min-height: 100vh;
-  }
-  h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 500; margin: 0; }
-  ::selection { background: var(--brass-soft); }
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
 
-  a { color: var(--teal); }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
 
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px 80px; }
+    h1,
+    h2,
+    h3 {
+      font-family: 'Fraunces', serif;
+      font-weight: 500;
+      margin: 0;
+    }
 
-  /* Masthead */
-  .masthead {
-    border-bottom: 1px solid var(--line);
-    padding: 28px 24px 22px;
-  }
-  .masthead-inner {
-    max-width: 1080px;
-    margin: 0 auto;
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .brand-mark {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-  }
-  .brand-mark .name {
-    font-family: 'Fraunces', serif;
-    font-size: 20px;
-    letter-spacing: 0.02em;
-  }
-  .brand-mark .divider { color: var(--line); }
-  .brand-mark .doc-type { color: var(--ink-soft); font-size: 15px; }
-  .draft-pill {
-    font-size: 13px;
-    color: var(--ink-soft);
-    border: 1px solid var(--line);
-    border-radius: 100px;
-    padding: 5px 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
-  }
-  .draft-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--teal);
-    transition: opacity 0.4s ease;
-  }
+    ::selection {
+      background: var(--brass-soft);
+    }
 
-  /* Intro */
-  .intro {
-    padding: 44px 0 8px;
-    max-width: 620px;
-  }
-  .intro h1 { font-size: 34px; line-height: 1.15; }
-  .intro p { color: var(--ink-soft); margin-top: 14px; font-size: 16px; }
+    a {
+      color: var(--teal);
+    }
 
-  /* Layout */
-  .layout {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 40px;
-    margin-top: 36px;
-    align-items: start;
-  }
-  @media (max-width: 800px) {
-    .layout { grid-template-columns: 1fr; gap: 20px; }
-  }
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
 
-  /* Sidebar tabs */
-  .tabs {
-    position: sticky;
-    top: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding-top: 6px;
-  }
-  @media (max-width: 800px) {
-    .tabs {
-      position: static;
-      flex-direction: row;
-      overflow-x: auto;
-      gap: 0;
+    /* Masthead */
+    .masthead {
       border-bottom: 1px solid var(--line);
-      padding-bottom: 0;
+      padding: 28px 24px 22px;
     }
-  }
-  .tab-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-align: left;
-    background: none;
-    border: none;
-    border-left: 2px solid transparent;
-    padding: 10px 14px;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    color: var(--ink-soft);
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  @media (max-width: 800px) {
+
+    .masthead-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .brand-mark .name {
+      font-family: 'Fraunces', serif;
+      font-size: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-mark .divider {
+      color: var(--line);
+    }
+
+    .brand-mark .doc-type {
+      color: var(--ink-soft);
+      font-size: 15px;
+    }
+
+    .draft-pill {
+      font-size: 13px;
+      color: var(--ink-soft);
+      border: 1px solid var(--line);
+      border-radius: 100px;
+      padding: 5px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .draft-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      transition: opacity 0.4s ease;
+    }
+
+    /* Intro */
+    .intro {
+      padding: 44px 0 8px;
+      max-width: 620px;
+    }
+
+    .intro h1 {
+      font-size: 34px;
+      line-height: 1.15;
+    }
+
+    .intro p {
+      color: var(--ink-soft);
+      margin-top: 14px;
+      font-size: 16px;
+    }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 40px;
+      margin-top: 36px;
+      align-items: start;
+    }
+
+    @media (max-width: 800px) {
+      .layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    /* Sidebar tabs */
+    .tabs {
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-top: 6px;
+    }
+
+    @media (max-width: 800px) {
+      .tabs {
+        position: static;
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 0;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 0;
+      }
+    }
+
     .tab-btn {
-      border-left: none;
-      border-bottom: 2px solid transparent;
-      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: left;
+      background: none;
+      border: none;
+      border-left: 2px solid transparent;
+      padding: 10px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--ink-soft);
+      cursor: pointer;
+      white-space: nowrap;
     }
-  }
-  .tab-btn .num {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    border: 1px solid var(--line);
-    font-size: 11px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    color: var(--ink-soft);
-  }
-  .tab-btn.done .num {
-    background: var(--teal);
-    border-color: var(--teal);
-    color: var(--panel);
-  }
-  .tab-btn.active {
-    color: var(--ink);
-    border-left-color: var(--brass);
-    font-weight: 500;
-  }
-  @media (max-width: 800px) {
-    .tab-btn.active { border-bottom-color: var(--brass); }
-  }
-  .tab-btn.active .num { border-color: var(--brass); color: var(--brass); }
-  .tab-btn.done.active .num { background: var(--brass); border-color: var(--brass); color: var(--panel); }
 
-  /* Panel */
-  .panel {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 36px;
-    min-width: 0;
-    box-shadow: 0 1px 3px rgba(30, 42, 46, 0.04);
-  }
-  @media (max-width: 640px) { .panel { padding: 24px 18px; } }
+    @media (max-width: 800px) {
+      .tab-btn {
+        border-left: none;
+        border-bottom: 2px solid transparent;
+        padding: 12px 14px;
+      }
+    }
 
-  .section { display: none; }
-  .section.active { display: block; animation: fadein 0.25s ease; }
-  @keyframes fadein { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: none; } }
+    .tab-btn .num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--ink-soft);
+    }
 
-  .section-head { margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--line-soft); }
-  .section-head h2 { font-size: 24px; }
-  .section-head p { color: var(--ink-soft); margin-top: 8px; font-size: 15px; max-width: 520px; }
+    .tab-btn.done .num {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: var(--panel);
+    }
 
-  .field-group { margin-bottom: 26px; }
-  .field-group:last-child { margin-bottom: 0; }
-  label.field-label {
-    display: block;
-    font-size: 13.5px;
-    font-weight: 500;
-    margin-bottom: 6px;
-    color: var(--ink);
-  }
-  .field-hint { font-size: 12.5px; color: var(--ink-soft); margin-top: 5px; }
-  .optional-tag { color: var(--ink-soft); font-weight: 400; font-size: 12.5px; }
+    .tab-btn.active {
+      color: var(--ink);
+      border-left-color: var(--brass);
+      font-weight: 500;
+    }
 
-  input[type=text], input[type=email], input[type=tel], input[type=url], input[type=date], textarea, select {
-    width: 100%;
-    font-family: 'Inter', sans-serif;
-    font-size: 14.5px;
-    color: var(--ink);
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 3px;
-    padding: 10px 12px;
-    outline: none;
-    transition: border-color 0.15s ease;
-  }
-  textarea { resize: vertical; min-height: 80px; }
-  input:focus, textarea:focus, select:focus {
-    border-color: var(--focus);
-    box-shadow: 0 0 0 3px var(--teal-soft);
-  }
-  ::placeholder { color: var(--ink-soft); opacity: 0.7; }
+    @media (max-width: 800px) {
+      .tab-btn.active {
+        border-bottom-color: var(--brass);
+      }
+    }
 
-  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 560px) { .row-2 { grid-template-columns: 1fr; } }
+    .tab-btn.active .num {
+      border-color: var(--brass);
+      color: var(--brass);
+    }
 
-  /* Checklist / radio cards */
-  .choice-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-  @media (max-width: 560px) { .choice-grid { grid-template-columns: 1fr; } }
+    .tab-btn.done.active .num {
+      background: var(--brass);
+      border-color: var(--brass);
+      color: var(--panel);
+    }
 
-  .choice {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    border: 1px solid var(--line);
-    border-radius: 3px;
-    padding: 12px 14px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: border-color 0.15s ease, background 0.15s ease;
-  }
-  .choice:hover { border-color: var(--ink-soft); }
-  .choice input { width: 15px; height: 15px; margin-top: 2px; accent-color: var(--brass); flex-shrink: 0; }
-  .choice.checked { border-color: var(--brass); background: var(--brass-soft); }
+    /* Panel */
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 36px;
+      min-width: 0;
+      box-shadow: 0 1px 3px rgba(30, 42, 46, 0.04);
+    }
 
-  /* Style preference cards */
-  .style-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-  @media (max-width: 560px) { .style-grid { grid-template-columns: 1fr; } }
-  .style-card {
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 16px;
-    cursor: pointer;
-  }
-  .style-card.checked { border-color: var(--brass); box-shadow: 0 0 0 1px var(--brass); background: var(--brass-soft); }
-  .style-card .swatches { display: flex; gap: 5px; margin-bottom: 10px; }
-  .style-card .sw { width: 16px; height: 16px; border-radius: 50%; }
-  .style-card .title { font-weight: 500; font-size: 14.5px; }
-  .style-card .desc { font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
-  .style-card input { display: none; }
+    @media (max-width: 640px) {
+      .panel {
+        padding: 24px 18px;
+      }
+    }
 
-  /* Repeatable block (competitor / inspiration) */
-  .repeat-block {
-    border: 1px solid var(--line-soft);
-    border-radius: 3px;
-    padding: 16px;
-    margin-bottom: 12px;
-  }
-  .repeat-block .repeat-title { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 12px; text-transform: none; }
+    .section {
+      display: none;
+    }
 
-  /* Upload dropzone */
-  .dropzone {
-    border: 1px dashed var(--line);
-    border-radius: 4px;
-    padding: 22px;
-    text-align: center;
-    font-size: 13.5px;
-    color: var(--ink-soft);
-    cursor: pointer;
-    transition: border-color 0.15s ease, background 0.15s ease;
-  }
-  .dropzone:hover, .dropzone.drag { border-color: var(--teal); background: var(--teal-soft); }
-  .dropzone .dz-title { color: var(--ink); font-weight: 500; margin-bottom: 4px; font-size: 14px; }
-  .dropzone input[type=file] { display: none; }
-  .upload-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-  @media (max-width: 560px) { .upload-grid { grid-template-columns: 1fr; } }
-  .file-list { margin-top: 8px; font-size: 12.5px; color: var(--teal); }
+    .section.active {
+      display: block;
+      animation: fadein 0.25s ease;
+    }
 
-  /* Footer nav */
-  .footer-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid var(--line-soft);
-  }
-  button.btn {
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    border-radius: 3px;
-    padding: 11px 20px;
-    cursor: pointer;
-    border: 1px solid var(--line);
-    background: none;
-    color: var(--ink);
-  }
-  button.btn:hover { border-color: var(--ink-soft); }
-  button.btn.primary {
-    background: var(--ink);
-    color: var(--paper);
-    border-color: var(--ink);
-  }
-  button.btn.primary:hover { opacity: 0.9; }
-  button.btn:disabled { opacity: 0.4; cursor: default; }
-  button.btn:focus-visible, .choice input:focus-visible, .style-card:focus-within, .tab-btn:focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
-  }
+    @keyframes fadein {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
 
-  /* Success state */
-  .success-view { text-align: center; padding: 60px 20px; }
-  .success-view h2 { font-size: 26px; margin-bottom: 12px; }
-  .success-view p { color: var(--ink-soft); max-width: 440px; margin: 0 auto; }
-  .success-mark {
-    width: 52px; height: 52px; border-radius: 50%;
-    background: var(--teal-soft); color: var(--teal);
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 20px; font-size: 24px;
-  }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
 
-  @media (prefers-reduced-motion: reduce) {
-    .section.active { animation: none; }
-  }
-</style>
+    .section-head {
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .section-head h2 {
+      font-size: 24px;
+    }
+
+    .section-head p {
+      color: var(--ink-soft);
+      margin-top: 8px;
+      font-size: 15px;
+      max-width: 520px;
+    }
+
+    .field-group {
+      margin-bottom: 26px;
+    }
+
+    .field-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label.field-label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .field-hint {
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      margin-top: 5px;
+    }
+
+    .optional-tag {
+      color: var(--ink-soft);
+      font-weight: 400;
+      font-size: 12.5px;
+    }
+
+    input[type=text],
+    input[type=email],
+    input[type=tel],
+    input[type=url],
+    input[type=date],
+    textarea,
+    select {
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      font-size: 14.5px;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--focus);
+      box-shadow: 0 0 0 3px var(--teal-soft);
+    }
+
+    ::placeholder {
+      color: var(--ink-soft);
+      opacity: 0.7;
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 560px) {
+      .row-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Checklist / radio cards */
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 560px) {
+      .choice-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .choice {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .choice:hover {
+      border-color: var(--ink-soft);
+    }
+
+    .choice input {
+      width: 15px;
+      height: 15px;
+      margin-top: 2px;
+      accent-color: var(--brass);
+      flex-shrink: 0;
+    }
+
+    .choice.checked {
+      border-color: var(--brass);
+      background: var(--brass-soft);
+    }
+
+    /* Style preference cards */
+    .style-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 560px) {
+      .style-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .style-card {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 16px;
+      cursor: pointer;
+    }
+
+    .style-card.checked {
+      border-color: var(--brass);
+      box-shadow: 0 0 0 1px var(--brass);
+      background: var(--brass-soft);
+    }
+
+    .style-card .swatches {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    .style-card .sw {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+
+    .style-card .title {
+      font-weight: 500;
+      font-size: 14.5px;
+    }
+
+    .style-card .desc {
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      margin-top: 4px;
+    }
+
+    .style-card input {
+      display: none;
+    }
+
+    /* Repeatable block (competitor / inspiration) */
+    .repeat-block {
+      border: 1px solid var(--line-soft);
+      border-radius: 3px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .repeat-block .repeat-title {
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      margin-bottom: 12px;
+      text-transform: none;
+    }
+
+    /* Upload dropzone */
+    .dropzone {
+      border: 1px dashed var(--line);
+      border-radius: 4px;
+      padding: 22px;
+      text-align: center;
+      font-size: 13.5px;
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .dropzone:hover,
+    .dropzone.drag {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .dropzone .dz-title {
+      color: var(--ink);
+      font-weight: 500;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .dropzone input[type=file] {
+      display: none;
+    }
+
+    .upload-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 560px) {
+      .upload-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .file-list {
+      margin-top: 8px;
+      font-size: 12.5px;
+      color: var(--teal);
+    }
+
+    /* Footer nav */
+    .footer-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    button.btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 3px;
+      padding: 11px 20px;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: none;
+      color: var(--ink);
+    }
+
+    button.btn:hover {
+      border-color: var(--ink-soft);
+    }
+
+    button.btn.primary {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    button.btn.primary:hover {
+      opacity: 0.9;
+    }
+
+    button.btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    button.btn:focus-visible,
+    .choice input:focus-visible,
+    .style-card:focus-within,
+    .tab-btn:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Success state */
+    .success-view {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .success-view h2 {
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
+
+    .success-view p {
+      color: var(--ink-soft);
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .success-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--teal-soft);
+      color: var(--teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 24px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .section.active {
+        animation: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="masthead">
-  <div class="masthead-inner">
-    <div class="brand-mark">
-      <span class="name">Siyantra</span>
-      <span class="divider">/</span>
-      <span class="doc-type">Project Discovery Portal</span>
+  <div class="masthead">
+    <div class="masthead-inner">
+      <div class="brand-mark">
+        <span class="name">Siyantra</span>
+        <span class="divider">/</span>
+        <span class="doc-type">Project Discovery Portal</span>
+      </div>
+      <div class="draft-pill"><span class="draft-dot" id="draftDot"></span><span id="draftLabel">Draft auto-saves as you
+          go</span></div>
     </div>
-    <div class="draft-pill"><span class="draft-dot" id="draftDot"></span><span id="draftLabel">Draft auto-saves as you go</span></div>
-  </div>
-</div>
-
-<div class="wrap">
-
-  <div class="intro">
-    <h1>Let's get your project brief in order.</h1>
-    <p>This takes about 15–20 minutes. Answer what you can — you can leave a field blank and come back to it, and everything is saved on this device as you type. Once you submit, our team will review the brief and follow up within two business days.</p>
   </div>
 
-  <div class="layout">
-    <nav class="tabs" id="tabs"></nav>
+  <div class="wrap">
 
-    <div class="panel">
-      <form id="discoveryForm">
+    <div class="intro">
+      <h1>Let's get your project brief in order.</h1>
+      <p>This takes about 15–20 minutes. Answer what you can — you can leave a field blank and come back to it, and
+        everything is saved on this device as you type. Once you submit, our team will review the brief and follow up
+        within two business days.</p>
+    </div>
 
-        <!-- Section 1: Welcome & Overview -->
-        <section class="section" data-section="0">
-          <div class="section-head">
-            <h2>About you and your business</h2>
-            <p>The basics — who we're building this for, and how to reach you.</p>
-          </div>
+    <div class="layout">
+      <nav class="tabs" id="tabs"></nav>
 
-          <div class="field-group">
-            <label class="field-label" for="clientName">Your name</label>
-            <input type="text" id="clientName" name="clientName" placeholder="e.g. Priya Sharma">
-          </div>
+      <div class="panel">
+        <form id="discoveryForm">
 
-          <div class="row-2">
+          <!-- Section 1: Welcome & Overview -->
+          <section class="section" data-section="0">
+            <div class="section-head">
+              <h2>About you and your business</h2>
+              <p>The basics — who we're building this for, and how to reach you.</p>
+            </div>
+
             <div class="field-group">
-              <label class="field-label" for="businessName">Business name</label>
-              <input type="text" id="businessName" name="businessName" placeholder="e.g. Rivermill Studio">
+              <label class="field-label" for="clientName">Your name</label>
+              <input type="text" id="clientName" name="clientName" placeholder="e.g. Priya Sharma">
             </div>
+
+            <div class="row-2">
+              <div class="field-group">
+                <label class="field-label" for="businessName">Business name</label>
+                <input type="text" id="businessName" name="businessName" placeholder="e.g. Rivermill Studio">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="tagline">Tagline <span class="optional-tag">(optional)</span></label>
+                <input type="text" id="tagline" name="tagline" placeholder="A line that sums up what you do">
+              </div>
+            </div>
+
             <div class="field-group">
-              <label class="field-label" for="tagline">Tagline <span class="optional-tag">(optional)</span></label>
-              <input type="text" id="tagline" name="tagline" placeholder="A line that sums up what you do">
+              <label class="field-label" for="industry">Industry or sector</label>
+              <input type="text" id="industry" name="industry" placeholder="e.g. Interior design, SaaS, hospitality">
             </div>
-          </div>
 
-          <div class="field-group">
-            <label class="field-label" for="industry">Industry or sector</label>
-            <input type="text" id="industry" name="industry" placeholder="e.g. Interior design, SaaS, hospitality">
-          </div>
+            <div class="row-2">
+              <div class="field-group">
+                <label class="field-label" for="email">Contact email</label>
+                <input type="email" id="email" name="email" placeholder="you@business.com">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="phone">Contact phone <span
+                    class="optional-tag">(optional)</span></label>
+                <input type="tel" id="phone" name="phone" placeholder="+44 ...">
+              </div>
+            </div>
+          </section>
 
-          <div class="row-2">
+          <!-- Section 2: Business Goals & Audience -->
+          <section class="section" data-section="1">
+            <div class="section-head">
+              <h2>What this site needs to do</h2>
+              <p>Every design decision follows from this — so be as specific as you can.</p>
+            </div>
+
             <div class="field-group">
-              <label class="field-label" for="email">Contact email</label>
-              <input type="email" id="email" name="email" placeholder="you@business.com">
+              <label class="field-label">Core objectives for the site</label>
+              <div class="choice-grid" id="objectivesGrid">
+                <label class="choice"><input type="checkbox" name="objectives" value="Generate leads"> Generate leads or
+                  enquiries</label>
+                <label class="choice"><input type="checkbox" name="objectives" value="Sell products online"> Sell
+                  products online</label>
+                <label class="choice"><input type="checkbox" name="objectives" value="Showcase our work"> Showcase our
+                  work or portfolio</label>
+                <label class="choice"><input type="checkbox" name="objectives" value="Build brand credibility"> Build
+                  brand credibility</label>
+                <label class="choice"><input type="checkbox" name="objectives" value="Provide info or support"> Provide
+                  information or support</label>
+                <label class="choice"><input type="checkbox" name="objectives" value="Other"> Something else</label>
+              </div>
             </div>
+
             <div class="field-group">
-              <label class="field-label" for="phone">Contact phone <span class="optional-tag">(optional)</span></label>
-              <input type="tel" id="phone" name="phone" placeholder="+44 ...">
+              <label class="field-label" for="objectivesDetail">Tell us more about your goals <span
+                  class="optional-tag">(optional)</span></label>
+              <textarea id="objectivesDetail" name="objectivesDetail"
+                placeholder="What does success look like in the first 6 months?"></textarea>
             </div>
-          </div>
-        </section>
 
-        <!-- Section 2: Business Goals & Audience -->
-        <section class="section" data-section="1">
-          <div class="section-head">
-            <h2>What this site needs to do</h2>
-            <p>Every design decision follows from this — so be as specific as you can.</p>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label">Core objectives for the site</label>
-            <div class="choice-grid" id="objectivesGrid">
-              <label class="choice"><input type="checkbox" name="objectives" value="Generate leads"> Generate leads or enquiries</label>
-              <label class="choice"><input type="checkbox" name="objectives" value="Sell products online"> Sell products online</label>
-              <label class="choice"><input type="checkbox" name="objectives" value="Showcase our work"> Showcase our work or portfolio</label>
-              <label class="choice"><input type="checkbox" name="objectives" value="Build brand credibility"> Build brand credibility</label>
-              <label class="choice"><input type="checkbox" name="objectives" value="Provide info or support"> Provide information or support</label>
-              <label class="choice"><input type="checkbox" name="objectives" value="Other"> Something else</label>
+            <div class="field-group">
+              <label class="field-label" for="audience">Who is this site for?</label>
+              <textarea id="audience" name="audience"
+                placeholder="Describe your ideal visitor or customer — their role, needs, and what brings them to your site"></textarea>
             </div>
-          </div>
 
-          <div class="field-group">
-            <label class="field-label" for="objectivesDetail">Tell us more about your goals <span class="optional-tag">(optional)</span></label>
-            <textarea id="objectivesDetail" name="objectivesDetail" placeholder="What does success look like in the first 6 months?"></textarea>
-          </div>
+            <div class="field-group">
+              <label class="field-label">Competitor websites</label>
+              <p class="field-hint" style="margin-top:-4px; margin-bottom: 12px;">Share 2–3 sites from businesses like
+                yours, and what stands out to you about each.</p>
+              <div id="competitorList"></div>
+            </div>
+          </section>
 
-          <div class="field-group">
-            <label class="field-label" for="audience">Who is this site for?</label>
-            <textarea id="audience" name="audience" placeholder="Describe your ideal visitor or customer — their role, needs, and what brings them to your site"></textarea>
-          </div>
+          <!-- Section 3: Branding & Design -->
+          <section class="section" data-section="2">
+            <div class="section-head">
+              <h2>Branding and design direction</h2>
+              <p>Send us what you already have, and tell us the direction you're drawn to.</p>
+            </div>
 
-          <div class="field-group">
-            <label class="field-label">Competitor websites</label>
-            <p class="field-hint" style="margin-top:-4px; margin-bottom: 12px;">Share 2–3 sites from businesses like yours, and what stands out to you about each.</p>
-            <div id="competitorList"></div>
-          </div>
-        </section>
-
-        <!-- Section 3: Branding & Design -->
-        <section class="section" data-section="2">
-          <div class="section-head">
-            <h2>Branding and design direction</h2>
-            <p>Send us what you already have, and tell us the direction you're drawn to.</p>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label">Brand assets</label>
-            <div class="upload-grid">
-              <div>
-                <div class="dropzone" data-dz="logo">
-                  <div class="dz-title">Logo files</div>
-                  Vector or PNG — drag files here or click to browse
-                  <input type="file" data-input="logo" multiple>
+            <div class="field-group">
+              <label class="field-label">Brand assets</label>
+              <div class="upload-grid">
+                <div>
+                  <div class="dropzone" data-dz="logo">
+                    <div class="dz-title">Logo files</div>
+                    Vector or PNG — drag files here or click to browse
+                    <input type="file" data-input="logo" multiple>
+                  </div>
+                  <div class="file-list" data-filelist="logo"></div>
                 </div>
-                <div class="file-list" data-filelist="logo"></div>
-              </div>
-              <div>
-                <div class="dropzone" data-dz="guidelines">
-                  <div class="dz-title">Brand guidelines</div>
-                  PDF or doc, if you have one
-                  <input type="file" data-input="guidelines" multiple>
+                <div>
+                  <div class="dropzone" data-dz="guidelines">
+                    <div class="dz-title">Brand guidelines</div>
+                    PDF or doc, if you have one
+                    <input type="file" data-input="guidelines" multiple>
+                  </div>
+                  <div class="file-list" data-filelist="guidelines"></div>
                 </div>
-                <div class="file-list" data-filelist="guidelines"></div>
-              </div>
-              <div>
-                <div class="dropzone" data-dz="colors">
-                  <div class="dz-title">Colour palette</div>
-                  Swatches, hex codes, or a reference image
-                  <input type="file" data-input="colors" multiple>
+                <div>
+                  <div class="dropzone" data-dz="colors">
+                    <div class="dz-title">Colour palette</div>
+                    Swatches, hex codes, or a reference image
+                    <input type="file" data-input="colors" multiple>
+                  </div>
+                  <div class="file-list" data-filelist="colors"></div>
                 </div>
-                <div class="file-list" data-filelist="colors"></div>
-              </div>
-              <div>
-                <div class="dropzone" data-dz="fonts">
-                  <div class="dz-title">Fonts</div>
-                  Font files, or just the names if you know them
-                  <input type="file" data-input="fonts" multiple>
+                <div>
+                  <div class="dropzone" data-dz="fonts">
+                    <div class="dz-title">Fonts</div>
+                    Font files, or just the names if you know them
+                    <input type="file" data-input="fonts" multiple>
+                  </div>
+                  <div class="file-list" data-filelist="fonts"></div>
                 </div>
-                <div class="file-list" data-filelist="fonts"></div>
+              </div>
+              <p class="field-hint">Don't have brand assets yet? Skip this — we'll develop a direction with you in
+                section design.</p>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Visual style</label>
+              <p class="field-hint" style="margin-top:-4px; margin-bottom: 12px;">Pick the direction that feels closest,
+                even if it's not exact.</p>
+              <div class="style-grid" id="styleGrid">
+                <label class="style-card" data-style="Minimalist">
+                  <input type="radio" name="visualStyle" value="Minimalist">
+                  <div class="swatches"><span class="sw" style="background:#FAFAF8;border:1px solid #ddd"></span><span
+                      class="sw" style="background:#1E2A2E"></span><span class="sw" style="background:#BFC4C2"></span>
+                  </div>
+                  <div class="title">Minimalist</div>
+                  <div class="desc">Clean, spacious, restrained</div>
+                </label>
+                <label class="style-card" data-style="Bold & Modern">
+                  <input type="radio" name="visualStyle" value="Bold & Modern">
+                  <div class="swatches"><span class="sw" style="background:#1B1B1B"></span><span class="sw"
+                      style="background:#E4FF3F"></span><span class="sw" style="background:#F4F4F4"></span></div>
+                  <div class="title">Bold & Modern</div>
+                  <div class="desc">High contrast, confident, current</div>
+                </label>
+                <label class="style-card" data-style="Corporate & Trustworthy">
+                  <input type="radio" name="visualStyle" value="Corporate & Trustworthy">
+                  <div class="swatches"><span class="sw" style="background:#0F2A4A"></span><span class="sw"
+                      style="background:#FFFFFF;border:1px solid #ddd"></span><span class="sw"
+                      style="background:#8CA3BE"></span></div>
+                  <div class="title">Corporate & Trustworthy</div>
+                  <div class="desc">Polished, structured, professional</div>
+                </label>
+                <label class="style-card" data-style="Creative & Expressive">
+                  <input type="radio" name="visualStyle" value="Creative & Expressive">
+                  <div class="swatches"><span class="sw" style="background:#D8562E"></span><span class="sw"
+                      style="background:#F2C14E"></span><span class="sw" style="background:#3D6B63"></span></div>
+                  <div class="title">Creative & Expressive</div>
+                  <div class="desc">Distinctive, characterful, unconventional</div>
+                </label>
               </div>
             </div>
-            <p class="field-hint">Don't have brand assets yet? Skip this — we'll develop a direction with you in section design.</p>
-          </div>
 
-          <div class="field-group">
-            <label class="field-label">Visual style</label>
-            <p class="field-hint" style="margin-top:-4px; margin-bottom: 12px;">Pick the direction that feels closest, even if it's not exact.</p>
-            <div class="style-grid" id="styleGrid">
-              <label class="style-card" data-style="Minimalist">
-                <input type="radio" name="visualStyle" value="Minimalist">
-                <div class="swatches"><span class="sw" style="background:#FAFAF8;border:1px solid #ddd"></span><span class="sw" style="background:#1E2A2E"></span><span class="sw" style="background:#BFC4C2"></span></div>
-                <div class="title">Minimalist</div>
-                <div class="desc">Clean, spacious, restrained</div>
-              </label>
-              <label class="style-card" data-style="Bold & Modern">
-                <input type="radio" name="visualStyle" value="Bold & Modern">
-                <div class="swatches"><span class="sw" style="background:#1B1B1B"></span><span class="sw" style="background:#E4FF3F"></span><span class="sw" style="background:#F4F4F4"></span></div>
-                <div class="title">Bold & Modern</div>
-                <div class="desc">High contrast, confident, current</div>
-              </label>
-              <label class="style-card" data-style="Corporate & Trustworthy">
-                <input type="radio" name="visualStyle" value="Corporate & Trustworthy">
-                <div class="swatches"><span class="sw" style="background:#0F2A4A"></span><span class="sw" style="background:#FFFFFF;border:1px solid #ddd"></span><span class="sw" style="background:#8CA3BE"></span></div>
-                <div class="title">Corporate & Trustworthy</div>
-                <div class="desc">Polished, structured, professional</div>
-              </label>
-              <label class="style-card" data-style="Creative & Expressive">
-                <input type="radio" name="visualStyle" value="Creative & Expressive">
-                <div class="swatches"><span class="sw" style="background:#D8562E"></span><span class="sw" style="background:#F2C14E"></span><span class="sw" style="background:#3D6B63"></span></div>
-                <div class="title">Creative & Expressive</div>
-                <div class="desc">Distinctive, characterful, unconventional</div>
-              </label>
-            </div>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label">Sites you admire</label>
-            <p class="field-hint" style="margin-top:-4px; margin-bottom: 12px;">2–3 sites (any industry) whose look and feel you'd like us to draw from.</p>
-            <div id="inspirationList"></div>
-          </div>
-        </section>
-
-        <!-- Section 4: Site Map & Content -->
-        <section class="section" data-section="3">
-          <div class="section-head">
-            <h2>Pages and content</h2>
-            <p>What the site needs to include, and what you can supply for it.</p>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label">Pages you'll need</label>
-            <div class="choice-grid">
-              <label class="choice"><input type="checkbox" name="pages" value="Home"> Home</label>
-              <label class="choice"><input type="checkbox" name="pages" value="About Us"> About us</label>
-              <label class="choice"><input type="checkbox" name="pages" value="Services"> Services</label>
-              <label class="choice"><input type="checkbox" name="pages" value="Portfolio"> Portfolio / case studies</label>
-              <label class="choice"><input type="checkbox" name="pages" value="Blog"> Blog</label>
-              <label class="choice"><input type="checkbox" name="pages" value="Contact"> Contact</label>
-            </div>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label" for="customPages">Any other pages? <span class="optional-tag">(optional)</span></label>
-            <input type="text" id="customPages" name="customPages" placeholder="e.g. FAQs, Careers, Pricing">
-          </div>
-
-          <div class="field-group">
-            <label class="field-label">Do you have copy and images ready?</label>
-            <div class="choice-grid" id="contentReadyGrid">
-              <label class="choice"><input type="radio" name="contentReady" value="We'll provide our own copy and images"> We'll provide our own copy and images</label>
-              <label class="choice"><input type="radio" name="contentReady" value="We need help writing copy"> We need help writing copy</label>
-              <label class="choice"><input type="radio" name="contentReady" value="We need help sourcing or creating images"> We need help sourcing or creating images</label>
-              <label class="choice"><input type="radio" name="contentReady" value="We need full content creation support"> We need full content creation support</label>
-            </div>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label" for="mediaLink">Link to your images, videos, or documents <span class="optional-tag">(optional)</span></label>
-            <input type="url" id="mediaLink" name="mediaLink" placeholder="Google Drive or Dropbox folder link">
-            <p class="field-hint">Make sure the link is set to "anyone with the link can view."</p>
-          </div>
-        </section>
-
-        <!-- Section 5: Technical & Integrations -->
-        <section class="section" data-section="4">
-          <div class="section-head">
-            <h2>Technical setup</h2>
-            <p>Domain, hosting, and the functionality your site needs to support.</p>
-          </div>
-
-          <div class="row-2">
             <div class="field-group">
-              <label class="field-label">Domain</label>
-              <div class="choice-grid" style="grid-template-columns:1fr;">
-                <label class="choice"><input type="radio" name="domainStatus" value="Already own a domain"> We already own a domain</label>
-                <label class="choice"><input type="radio" name="domainStatus" value="Need help registering one"> We need help registering one</label>
+              <label class="field-label">Sites you admire</label>
+              <p class="field-hint" style="margin-top:-4px; margin-bottom: 12px;">2–3 sites (any industry) whose look
+                and feel you'd like us to draw from.</p>
+              <div id="inspirationList"></div>
+            </div>
+          </section>
+
+          <!-- Section 4: Site Map & Content -->
+          <section class="section" data-section="3">
+            <div class="section-head">
+              <h2>Pages and content</h2>
+              <p>What the site needs to include, and what you can supply for it.</p>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Pages you'll need</label>
+              <div class="choice-grid">
+                <label class="choice"><input type="checkbox" name="pages" value="Home"> Home</label>
+                <label class="choice"><input type="checkbox" name="pages" value="About Us"> About us</label>
+                <label class="choice"><input type="checkbox" name="pages" value="Services"> Services</label>
+                <label class="choice"><input type="checkbox" name="pages" value="Portfolio"> Portfolio / case
+                  studies</label>
+                <label class="choice"><input type="checkbox" name="pages" value="Blog"> Blog</label>
+                <label class="choice"><input type="checkbox" name="pages" value="Contact"> Contact</label>
               </div>
             </div>
+
             <div class="field-group">
-              <label class="field-label">Hosting</label>
-              <div class="choice-grid" style="grid-template-columns:1fr;">
-                <label class="choice"><input type="radio" name="hostingStatus" value="Already have hosting"> We already have hosting</label>
-                <label class="choice"><input type="radio" name="hostingStatus" value="Need hosting set up"> We need hosting set up</label>
-                <label class="choice"><input type="radio" name="hostingStatus" value="Not sure"> Not sure yet</label>
+              <label class="field-label" for="customPages">Any other pages? <span
+                  class="optional-tag">(optional)</span></label>
+              <input type="text" id="customPages" name="customPages" placeholder="e.g. FAQs, Careers, Pricing">
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Do you have copy and images ready?</label>
+              <div class="choice-grid" id="contentReadyGrid">
+                <label class="choice"><input type="radio" name="contentReady"
+                    value="We'll provide our own copy and images"> We'll provide our own copy and images</label>
+                <label class="choice"><input type="radio" name="contentReady" value="We need help writing copy"> We need
+                  help writing copy</label>
+                <label class="choice"><input type="radio" name="contentReady"
+                    value="We need help sourcing or creating images"> We need help sourcing or creating images</label>
+                <label class="choice"><input type="radio" name="contentReady"
+                    value="We need full content creation support"> We need full content creation support</label>
               </div>
             </div>
-          </div>
 
-          <div class="field-group">
-            <label class="field-label" for="domainName">Domain name, if you have one <span class="optional-tag">(optional)</span></label>
-            <input type="text" id="domainName" name="domainName" placeholder="e.g. yourbusiness.com">
-          </div>
-
-          <div class="field-group">
-            <label class="field-label">Must-have functionality</label>
-            <div class="choice-grid">
-              <label class="choice"><input type="checkbox" name="features" value="Contact form"> Contact form</label>
-              <label class="choice"><input type="checkbox" name="features" value="Booking or calendar"> Booking or calendar</label>
-              <label class="choice"><input type="checkbox" name="features" value="Online payments"> Online payments</label>
-              <label class="choice"><input type="checkbox" name="features" value="Search engine optimisation"> Search engine optimisation</label>
-              <label class="choice"><input type="checkbox" name="features" value="Multi-language support"> Multi-language support</label>
-              <label class="choice"><input type="checkbox" name="features" value="User accounts or login"> User accounts or login</label>
-              <label class="choice"><input type="checkbox" name="features" value="Blog or CMS"> Blog or CMS</label>
-              <label class="choice"><input type="checkbox" name="features" value="Other"> Something else</label>
-            </div>
-          </div>
-
-          <div class="row-2">
             <div class="field-group">
-              <label class="field-label" for="targetDate">Target completion date <span class="optional-tag">(optional)</span></label>
-              <input type="date" id="targetDate" name="targetDate">
+              <label class="field-label" for="mediaLink">Link to your images, videos, or documents <span
+                  class="optional-tag">(optional)</span></label>
+              <input type="url" id="mediaLink" name="mediaLink" placeholder="Google Drive or Dropbox folder link">
+              <p class="field-hint">Make sure the link is set to "anyone with the link can view."</p>
             </div>
-            <div class="field-group">
-              <label class="field-label" for="budget">Anything else we should know? <span class="optional-tag">(optional)</span></label>
-              <input type="text" id="budget" name="notes" placeholder="Budget range, constraints, deadlines">
-            </div>
-          </div>
-        </section>
+          </section>
 
-        <div class="footer-nav">
-          <button type="button" class="btn" id="backBtn">Back</button>
-          <button type="button" class="btn primary" id="nextBtn">Continue</button>
+          <!-- Section 5: Technical & Integrations -->
+          <section class="section" data-section="4">
+            <div class="section-head">
+              <h2>Technical setup</h2>
+              <p>Domain, hosting, and the functionality your site needs to support.</p>
+            </div>
+
+            <div class="row-2">
+              <div class="field-group">
+                <label class="field-label">Domain</label>
+                <div class="choice-grid" style="grid-template-columns:1fr;">
+                  <label class="choice"><input type="radio" name="domainStatus" value="Already own a domain"> We already
+                    own a domain</label>
+                  <label class="choice"><input type="radio" name="domainStatus" value="Need help registering one"> We
+                    need help registering one</label>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Hosting</label>
+                <div class="choice-grid" style="grid-template-columns:1fr;">
+                  <label class="choice"><input type="radio" name="hostingStatus" value="Already have hosting"> We
+                    already have hosting</label>
+                  <label class="choice"><input type="radio" name="hostingStatus" value="Need hosting set up"> We need
+                    hosting set up</label>
+                  <label class="choice"><input type="radio" name="hostingStatus" value="Not sure"> Not sure yet</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="domainName">Domain name, if you have one <span
+                  class="optional-tag">(optional)</span></label>
+              <input type="text" id="domainName" name="domainName" placeholder="e.g. yourbusiness.com">
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Must-have functionality</label>
+              <div class="choice-grid">
+                <label class="choice"><input type="checkbox" name="features" value="Contact form"> Contact form</label>
+                <label class="choice"><input type="checkbox" name="features" value="Booking or calendar"> Booking or
+                  calendar</label>
+                <label class="choice"><input type="checkbox" name="features" value="Online payments"> Online
+                  payments</label>
+                <label class="choice"><input type="checkbox" name="features" value="Search engine optimisation"> Search
+                  engine optimisation</label>
+                <label class="choice"><input type="checkbox" name="features" value="Multi-language support">
+                  Multi-language support</label>
+                <label class="choice"><input type="checkbox" name="features" value="User accounts or login"> User
+                  accounts or login</label>
+                <label class="choice"><input type="checkbox" name="features" value="Blog or CMS"> Blog or CMS</label>
+                <label class="choice"><input type="checkbox" name="features" value="Other"> Something else</label>
+              </div>
+            </div>
+
+            <div class="row-2">
+              <div class="field-group">
+                <label class="field-label" for="targetDate">Target completion date <span
+                    class="optional-tag">(optional)</span></label>
+                <input type="date" id="targetDate" name="targetDate">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="budget">Anything else we should know? <span
+                    class="optional-tag">(optional)</span></label>
+                <input type="text" id="budget" name="notes" placeholder="Budget range, constraints, deadlines">
+              </div>
+            </div>
+          </section>
+
+          <div class="footer-nav">
+            <button type="button" class="btn" id="backBtn">Back</button>
+            <button type="button" class="btn primary" id="nextBtn">Continue</button>
+          </div>
+        </form>
+
+        <div class="success-view" id="successView" style="display:none;">
+          <div class="success-mark">&#10003;</div>
+          <h2>Thank you! Brief submitted.</h2>
+          <p>We've received your project details. Our team will review your brief and follow up with you within two
+            business days.</p>
         </div>
-      </form>
-
-      <div class="success-view" id="successView" style="display:none;">
-        <div class="success-mark">&#10003;</div>
-        <h2>Thank you! Brief submitted.</h2>
-        <p>We've received your project details. Our team will review your brief and follow up with you within two business days.</p>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-(function(){
-  var STORAGE_KEY = 'siyantra-discovery-draft-v1';
-  var sectionNames = ['Welcome', 'Goals & audience', 'Branding & design', 'Pages & content', 'Technical setup'];
-  var current = 0;
-  var total = sectionNames.length;
+  <script>
+    (function () {
+      var STORAGE_KEY = 'siyantra-discovery-draft-v1';
+      var sectionNames = ['Welcome', 'Goals & audience', 'Branding & design', 'Pages & content', 'Technical setup'];
+      var current = 0;
+      var total = sectionNames.length;
 
-  var tabsEl = document.getElementById('tabs');
-  var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
-  var backBtn = document.getElementById('backBtn');
-  var nextBtn = document.getElementById('nextBtn');
-  var form = document.getElementById('discoveryForm');
-  var successView = document.getElementById('successView');
-  var draftDot = document.getElementById('draftDot');
-  var draftLabel = document.getElementById('draftLabel');
+      var tabsEl = document.getElementById('tabs');
+      var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
+      var backBtn = document.getElementById('backBtn');
+      var nextBtn = document.getElementById('nextBtn');
+      var form = document.getElementById('discoveryForm');
+      var successView = document.getElementById('successView');
+      var draftDot = document.getElementById('draftDot');
+      var draftLabel = document.getElementById('draftLabel');
 
-  var visited = [true, false, false, false, false];
+      var visited = [true, false, false, false, false];
 
-  function buildTabs(){
-    tabsEl.innerHTML = '';
-    sectionNames.forEach(function(name, i){
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'tab-btn' + (i === current ? ' active' : '') + (visited[i] && i !== current ? ' done' : '');
-      btn.innerHTML = '<span class="num">' + (visited[i] && i < current ? '&#10003;' : (i+1)) + '</span><span>' + name + '</span>';
-      btn.addEventListener('click', function(){ goTo(i); });
-      tabsEl.appendChild(btn);
-    });
-  }
-
-  function goTo(index){
-    current = index;
-    visited[index] = true;
-    sections.forEach(function(sec){
-      sec.classList.toggle('active', parseInt(sec.dataset.section, 10) === current);
-    });
-    backBtn.disabled = current === 0;
-    nextBtn.textContent = current === total - 1 ? 'Submit project brief' : 'Save & continue';
-    buildTabs();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  var currentBriefData = null;
-
-  backBtn.addEventListener('click', function(){ if (current > 0) goTo(current - 1); });
-  nextBtn.addEventListener('click', function(){
-    if (current < total - 1) {
-      goTo(current + 1);
-    } else {
-      currentBriefData = getFormDataObject();
-      form.style.display = 'none';
-      document.querySelector('.tabs').style.display = 'none';
-      successView.style.display = 'block';
-      clearDraft();
-      
-      // Send brief data quietly to Supabase
-      sendToSupabase(currentBriefData);
-    }
-  });
-
-  // --- Repeatable blocks: competitors & inspiration ---
-  function buildRepeatBlock(container, count, namePrefix, urlLabel, q1Label, q2Label){
-    for (var i = 1; i <= count; i++) {
-      var block = document.createElement('div');
-      block.className = 'repeat-block';
-      block.innerHTML =
-        '<div class="repeat-title">Site ' + i + (i > 2 ? ' (optional)' : '') + '</div>' +
-        '<div class="field-group" style="margin-bottom:12px;">' +
-          '<label class="field-label">' + urlLabel + '</label>' +
-          '<input type="url" name="' + namePrefix + i + '_url" placeholder="https://">' +
-        '</div>' +
-        '<div class="field-group" style="margin-bottom:0;">' +
-          '<label class="field-label">' + q1Label + '</label>' +
-          '<textarea name="' + namePrefix + i + '_notes" placeholder="' + q2Label + '"></textarea>' +
-        '</div>';
-      container.appendChild(block);
-    }
-  }
-  buildRepeatBlock(document.getElementById('competitorList'), 3, 'competitor', 'Website URL', 'What do you like or dislike about it?', 'A line or two is plenty');
-  buildRepeatBlock(document.getElementById('inspirationList'), 3, 'inspiration', 'Website URL', 'What draws you to it?', 'Layout, colour, tone — whatever stands out');
-
-  // --- Choice highlighting ---
-  document.querySelectorAll('.choice input').forEach(function(input){
-    input.addEventListener('change', function(){
-      var label = input.closest('.choice');
-      if (input.type === 'checkbox') {
-        label.classList.toggle('checked', input.checked);
-      } else {
-        var name = input.name;
-        document.querySelectorAll('input[name="' + name + '"]').forEach(function(sib){
-          sib.closest('.choice').classList.toggle('checked', sib.checked);
+      function buildTabs() {
+        tabsEl.innerHTML = '';
+        sectionNames.forEach(function (name, i) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'tab-btn' + (i === current ? ' active' : '') + (visited[i] && i !== current ? ' done' : '');
+          btn.innerHTML = '<span class="num">' + (visited[i] && i < current ? '&#10003;' : (i + 1)) + '</span><span>' + name + '</span>';
+          btn.addEventListener('click', function () { goTo(i); });
+          tabsEl.appendChild(btn);
         });
       }
-      saveDraft();
-    });
-  });
 
-  // --- Style cards ---
-  document.querySelectorAll('.style-card').forEach(function(card){
-    card.addEventListener('click', function(){
-      document.querySelectorAll('.style-card').forEach(function(c){ c.classList.remove('checked'); });
-      card.classList.add('checked');
-      card.querySelector('input').checked = true;
-      saveDraft();
-    });
-  });
-
-  // --- Dropzones ---
-  document.querySelectorAll('.dropzone').forEach(function(zone){
-    var key = zone.dataset.dz;
-    var input = zone.querySelector('input[type=file]');
-    var list = document.querySelector('.file-list[data-filelist="' + key + '"]');
-    zone.addEventListener('click', function(){ input.click(); });
-    zone.addEventListener('dragover', function(e){ e.preventDefault(); zone.classList.add('drag'); });
-    zone.addEventListener('dragleave', function(){ zone.classList.remove('drag'); });
-    zone.addEventListener('drop', function(e){
-      e.preventDefault();
-      zone.classList.remove('drag');
-      if (e.dataTransfer.files.length) showFiles(e.dataTransfer.files);
-    });
-    input.addEventListener('change', function(){ showFiles(input.files); });
-    function showFiles(files){
-      var names = Array.prototype.map.call(files, function(f){ return f.name; });
-      list.textContent = names.join(', ');
-    }
-  });
-
-  // --- Draft autosave (per-device, this browser only) ---
-  var saveTimeout;
-  function saveDraft(){
-    clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(function(){
-      try {
-        var data = {};
-        new FormData(form).forEach(function(value, key){
-          if (data[key]) {
-            if (Array.isArray(data[key])) data[key].push(value); else data[key] = [data[key], value];
-          } else {
-            data[key] = value;
-          }
+      function goTo(index) {
+        current = index;
+        visited[index] = true;
+        sections.forEach(function (sec) {
+          sec.classList.toggle('active', parseInt(sec.dataset.section, 10) === current);
         });
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        flashSaved();
-      } catch (err) { /* storage unavailable — continue silently */ }
-    }, 400);
-  }
-  function flashSaved(){
-    draftLabel.textContent = 'Draft saved';
-    draftDot.style.opacity = '1';
-    setTimeout(function(){ draftLabel.textContent = 'Draft auto-saves as you go'; }, 1800);
-  }
-  function clearDraft(){
-    try { localStorage.removeItem(STORAGE_KEY); } catch (err) {}
-  }
-  function loadDraft(){
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      var data = JSON.parse(raw);
-      Object.keys(data).forEach(function(key){
-        var values = Array.isArray(data[key]) ? data[key] : [data[key]];
-        var inputs = form.querySelectorAll('[name="' + CSS.escape(key) + '"]');
-        inputs.forEach(function(input){
-          if (input.type === 'checkbox' || input.type === 'radio') {
-            input.checked = values.indexOf(input.value) !== -1;
-            if (input.checked) {
-              var el = input.closest('.choice');
-              if (el) el.classList.add('checked');
-              var card = input.closest('.style-card');
-              if (card) card.classList.add('checked');
-            }
+        backBtn.disabled = current === 0;
+        nextBtn.textContent = current === total - 1 ? 'Submit project brief' : 'Save & continue';
+        buildTabs();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      var currentBriefData = null;
+
+      backBtn.addEventListener('click', function () { if (current > 0) goTo(current - 1); });
+      nextBtn.addEventListener('click', function () {
+        if (current < total - 1) {
+          goTo(current + 1);
+        } else {
+          currentBriefData = getFormDataObject();
+          form.style.display = 'none';
+          document.querySelector('.tabs').style.display = 'none';
+          successView.style.display = 'block';
+          clearDraft();
+
+          // Send brief data quietly to Supabase
+          sendToSupabase(currentBriefData);
+        }
+      });
+
+      // --- Repeatable blocks: competitors & inspiration ---
+      function buildRepeatBlock(container, count, namePrefix, urlLabel, q1Label, q2Label) {
+        for (var i = 1; i <= count; i++) {
+          var block = document.createElement('div');
+          block.className = 'repeat-block';
+          block.innerHTML =
+            '<div class="repeat-title">Site ' + i + (i > 2 ? ' (optional)' : '') + '</div>' +
+            '<div class="field-group" style="margin-bottom:12px;">' +
+            '<label class="field-label">' + urlLabel + '</label>' +
+            '<input type="url" name="' + namePrefix + i + '_url" placeholder="https://">' +
+            '</div>' +
+            '<div class="field-group" style="margin-bottom:0;">' +
+            '<label class="field-label">' + q1Label + '</label>' +
+            '<textarea name="' + namePrefix + i + '_notes" placeholder="' + q2Label + '"></textarea>' +
+            '</div>';
+          container.appendChild(block);
+        }
+      }
+      buildRepeatBlock(document.getElementById('competitorList'), 3, 'competitor', 'Website URL', 'What do you like or dislike about it?', 'A line or two is plenty');
+      buildRepeatBlock(document.getElementById('inspirationList'), 3, 'inspiration', 'Website URL', 'What draws you to it?', 'Layout, colour, tone — whatever stands out');
+
+      // --- Choice highlighting ---
+      document.querySelectorAll('.choice input').forEach(function (input) {
+        input.addEventListener('change', function () {
+          var label = input.closest('.choice');
+          if (input.type === 'checkbox') {
+            label.classList.toggle('checked', input.checked);
           } else {
-            input.value = values[0];
+            var name = input.name;
+            document.querySelectorAll('input[name="' + name + '"]').forEach(function (sib) {
+              sib.closest('.choice').classList.toggle('checked', sib.checked);
+            });
           }
+          saveDraft();
         });
       });
-    } catch (err) { /* ignore malformed or unavailable storage */ }
-  }
 
-  form.addEventListener('input', saveDraft);
-  form.addEventListener('change', saveDraft);
+      // --- Style cards ---
+      document.querySelectorAll('.style-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+          document.querySelectorAll('.style-card').forEach(function (c) { c.classList.remove('checked'); });
+          card.classList.add('checked');
+          card.querySelector('input').checked = true;
+          saveDraft();
+        });
+      });
 
-  function getFormDataObject(){
-    var data = {};
-    var formData = new FormData(form);
-    formData.forEach(function(value, key){
-      if (data[key]) {
-        if (Array.isArray(data[key])) {
-          data[key].push(value);
-        } else {
-          data[key] = [data[key], value];
+      // --- Dropzones ---
+      document.querySelectorAll('.dropzone').forEach(function (zone) {
+        var key = zone.dataset.dz;
+        var input = zone.querySelector('input[type=file]');
+        var list = document.querySelector('.file-list[data-filelist="' + key + '"]');
+        zone.addEventListener('click', function () { input.click(); });
+        zone.addEventListener('dragover', function (e) { e.preventDefault(); zone.classList.add('drag'); });
+        zone.addEventListener('dragleave', function () { zone.classList.remove('drag'); });
+        zone.addEventListener('drop', function (e) {
+          e.preventDefault();
+          zone.classList.remove('drag');
+          if (e.dataTransfer.files.length) showFiles(e.dataTransfer.files);
+        });
+        input.addEventListener('change', function () { showFiles(input.files); });
+        function showFiles(files) {
+          var names = Array.prototype.map.call(files, function (f) { return f.name; });
+          list.textContent = names.join(', ');
         }
-      } else {
-        var input = form.querySelector('[name="' + CSS.escape(key) + '"]');
-        if (input && input.type === 'checkbox') {
-          data[key] = [value];
-        } else {
-          data[key] = value;
+      });
+
+      // --- Draft autosave (per-device, this browser only) ---
+      var saveTimeout;
+      function saveDraft() {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(function () {
+          try {
+            var data = {};
+            new FormData(form).forEach(function (value, key) {
+              if (data[key]) {
+                if (Array.isArray(data[key])) data[key].push(value); else data[key] = [data[key], value];
+              } else {
+                data[key] = value;
+              }
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            flashSaved();
+          } catch (err) { /* storage unavailable — continue silently */ }
+        }, 400);
+      }
+      function flashSaved() {
+        draftLabel.textContent = 'Draft saved';
+        draftDot.style.opacity = '1';
+        setTimeout(function () { draftLabel.textContent = 'Draft auto-saves as you go'; }, 1800);
+      }
+      function clearDraft() {
+        try { localStorage.removeItem(STORAGE_KEY); } catch (err) { }
+      }
+      function loadDraft() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          var data = JSON.parse(raw);
+          Object.keys(data).forEach(function (key) {
+            var values = Array.isArray(data[key]) ? data[key] : [data[key]];
+            var inputs = form.querySelectorAll('[name="' + CSS.escape(key) + '"]');
+            inputs.forEach(function (input) {
+              if (input.type === 'checkbox' || input.type === 'radio') {
+                input.checked = values.indexOf(input.value) !== -1;
+                if (input.checked) {
+                  var el = input.closest('.choice');
+                  if (el) el.classList.add('checked');
+                  var card = input.closest('.style-card');
+                  if (card) card.classList.add('checked');
+                }
+              } else {
+                input.value = values[0];
+              }
+            });
+          });
+        } catch (err) { /* ignore malformed or unavailable storage */ }
+      }
+
+      form.addEventListener('input', saveDraft);
+      form.addEventListener('change', saveDraft);
+
+      function getFormDataObject() {
+        var data = {};
+        var formData = new FormData(form);
+        formData.forEach(function (value, key) {
+          if (data[key]) {
+            if (Array.isArray(data[key])) {
+              data[key].push(value);
+            } else {
+              data[key] = [data[key], value];
+            }
+          } else {
+            var input = form.querySelector('[name="' + CSS.escape(key) + '"]');
+            if (input && input.type === 'checkbox') {
+              data[key] = [value];
+            } else {
+              data[key] = value;
+            }
+          }
+        });
+
+        ['logo', 'guidelines', 'colors', 'fonts'].forEach(function (key) {
+          var list = document.querySelector('.file-list[data-filelist="' + key + '"]');
+          if (list && list.textContent.trim()) {
+            data['brand_' + key] = list.textContent.trim();
+          } else {
+            data['brand_' + key] = 'N/A';
+          }
+        });
+
+        return data;
+      }
+
+      function escapeHtml(str) {
+        if (!str || str.trim() === '') return 'N/A';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function formatArray(arr) {
+        if (!arr || (Array.isArray(arr) && arr.length === 0)) return 'N/A';
+        if (Array.isArray(arr)) return arr.map(escapeHtml).join(', ');
+        return escapeHtml(arr);
+      }
+
+      function formatCompetitors(data) {
+        var items = [];
+        for (var i = 1; i <= 3; i++) {
+          var url = data['competitor' + i + '_url'];
+          var notes = data['competitor' + i + '_notes'];
+          if ((url && url.trim()) || (notes && notes.trim())) {
+            items.push('<div style="margin-top:2px; font-size:12.5px;">• <strong>' + (url ? escapeHtml(url) : 'Site ' + i) + '</strong>' + (notes ? ': ' + escapeHtml(notes) : '') + '</div>');
+          }
         }
+        if (!items.length) return 'N/A';
+        return items.join('');
       }
-    });
 
-    ['logo', 'guidelines', 'colors', 'fonts'].forEach(function(key){
-      var list = document.querySelector('.file-list[data-filelist="' + key + '"]');
-      if (list && list.textContent.trim()) {
-        data['brand_' + key] = list.textContent.trim();
-      } else {
-        data['brand_' + key] = 'N/A';
+      function formatInspiration(data) {
+        var items = [];
+        for (var i = 1; i <= 3; i++) {
+          var url = data['inspiration' + i + '_url'];
+          var notes = data['inspiration' + i + '_notes'];
+          if ((url && url.trim()) || (notes && notes.trim())) {
+            items.push('<div style="margin-top:2px; font-size:12.5px;">• <strong>' + (url ? escapeHtml(url) : 'Site ' + i) + '</strong>' + (notes ? ': ' + escapeHtml(notes) : '') + '</div>');
+          }
+        }
+        if (!items.length) return 'N/A';
+        return items.join('');
       }
-    });
 
-    return data;
-  }
+      function generatePdfBrief(data) {
+        var bizName = data.businessName || data.clientName || 'Client';
+        var dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        var refId = 'SY-' + Math.floor(100000 + Math.random() * 900000);
 
-  function escapeHtml(str) {
-    if (!str || str.trim() === '') return 'N/A';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
+        var container = document.createElement('div');
+        container.style.padding = '26px 30px';
+        container.style.fontFamily = "'Inter', sans-serif";
+        container.style.color = '#1E2A2E';
+        container.style.background = '#FFFFFF';
+        container.style.lineHeight = '1.5';
 
-  function formatArray(arr) {
-    if (!arr || (Array.isArray(arr) && arr.length === 0)) return 'N/A';
-    if (Array.isArray(arr)) return arr.map(escapeHtml).join(', ');
-    return escapeHtml(arr);
-  }
-
-  function formatCompetitors(data) {
-    var items = [];
-    for (var i = 1; i <= 3; i++) {
-      var url = data['competitor' + i + '_url'];
-      var notes = data['competitor' + i + '_notes'];
-      if ((url && url.trim()) || (notes && notes.trim())) {
-        items.push('<div style="margin-top:2px; font-size:12.5px;">• <strong>' + (url ? escapeHtml(url) : 'Site ' + i) + '</strong>' + (notes ? ': ' + escapeHtml(notes) : '') + '</div>');
-      }
-    }
-    if (!items.length) return 'N/A';
-    return items.join('');
-  }
-
-  function formatInspiration(data) {
-    var items = [];
-    for (var i = 1; i <= 3; i++) {
-      var url = data['inspiration' + i + '_url'];
-      var notes = data['inspiration' + i + '_notes'];
-      if ((url && url.trim()) || (notes && notes.trim())) {
-        items.push('<div style="margin-top:2px; font-size:12.5px;">• <strong>' + (url ? escapeHtml(url) : 'Site ' + i) + '</strong>' + (notes ? ': ' + escapeHtml(notes) : '') + '</div>');
-      }
-    }
-    if (!items.length) return 'N/A';
-    return items.join('');
-  }
-
-  function generatePdfBrief(data) {
-    var bizName = data.businessName || data.clientName || 'Client';
-    var dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    var refId = 'SY-' + Math.floor(100000 + Math.random() * 900000);
-
-    var container = document.createElement('div');
-    container.style.padding = '26px 30px';
-    container.style.fontFamily = "'Inter', sans-serif";
-    container.style.color = '#1E2A2E';
-    container.style.background = '#FFFFFF';
-    container.style.lineHeight = '1.5';
-
-    container.innerHTML =
-      '<div style="border-bottom:2px solid #4F46E5; padding-bottom:12px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:flex-end;">' +
-        '<div>' +
+        container.innerHTML =
+          '<div style="border-bottom:2px solid #4F46E5; padding-bottom:12px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:flex-end;">' +
+          '<div>' +
           '<h1 style="font-family:\'Fraunces\', serif; font-size:24px; margin:0; color:#1E2A2E; letter-spacing:0.02em;">Siyantra</h1>' +
           '<div style="font-size:13px; color:#5B6668; margin-top:2px;">Project Discovery Brief &bull; Complete Specifications</div>' +
-        '</div>' +
-        '<div style="text-align:right; font-size:12px; color:#5B6668;">' +
+          '</div>' +
+          '<div style="text-align:right; font-size:12px; color:#5B6668;">' +
           '<div><strong>Ref:</strong> ' + refId + '</div>' +
           '<div><strong>Date:</strong> ' + dateStr + '</div>' +
-        '</div>' +
-      '</div>' +
+          '</div>' +
+          '</div>' +
 
-      '<div style="margin-bottom:16px;">' +
-        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">1. Client & Business Overview</h2>' +
-        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
+          '<div style="margin-bottom:16px;">' +
+          '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">1. Client & Business Overview</h2>' +
+          '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
           '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Client Name:</td><td><strong>' + escapeHtml(data.clientName) + '</strong></td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Business Name:</td><td><strong>' + escapeHtml(data.businessName) + '</strong></td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Tagline:</td><td>' + escapeHtml(data.tagline) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Industry / Sector:</td><td>' + escapeHtml(data.industry) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Contact Email:</td><td><strong>' + escapeHtml(data.email) + '</strong></td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Contact Phone:</td><td>' + escapeHtml(data.phone) + '</td></tr>' +
-        '</table>' +
-      '</div>' +
+          '</table>' +
+          '</div>' +
 
-      '<div style="margin-bottom:16px;">' +
-        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">2. Business Goals & Audience</h2>' +
-        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
+          '<div style="margin-bottom:16px;">' +
+          '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">2. Business Goals & Audience</h2>' +
+          '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
           '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Core Objectives:</td><td><strong>' + formatArray(data.objectives) + '</strong></td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Goals Detail:</td><td>' + escapeHtml(data.objectivesDetail) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Target Audience:</td><td>' + escapeHtml(data.audience) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668; vertical-align:top;">Competitor Sites:</td><td>' + formatCompetitors(data) + '</td></tr>' +
-        '</table>' +
-      '</div>' +
+          '</table>' +
+          '</div>' +
 
-      '<div style="margin-bottom:16px;">' +
-        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">3. Branding & Design Direction</h2>' +
-        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
+          '<div style="margin-bottom:16px;">' +
+          '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">3. Branding & Design Direction</h2>' +
+          '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
           '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Visual Style Selected:</td><td><span style="background:#EEECFD; color:#4F46E5; padding:2px 8px; border-radius:4px; font-weight:600;">' + escapeHtml(data.visualStyle) + '</span></td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Logo Files:</td><td>' + escapeHtml(data.brand_logo) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Brand Guidelines:</td><td>' + escapeHtml(data.brand_guidelines) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Color Palette:</td><td>' + escapeHtml(data.brand_colors) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Font Files:</td><td>' + escapeHtml(data.brand_fonts) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668; vertical-align:top;">Inspiration Sites:</td><td>' + formatInspiration(data) + '</td></tr>' +
-        '</table>' +
-      '</div>' +
+          '</table>' +
+          '</div>' +
 
-      '<div style="margin-bottom:16px;">' +
-        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">4. Pages & Content</h2>' +
-        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
+          '<div style="margin-bottom:16px;">' +
+          '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">4. Pages & Content</h2>' +
+          '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
           '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Pages Required:</td><td><strong>' + formatArray(data.pages) + '</strong></td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Other / Custom Pages:</td><td>' + escapeHtml(data.customPages) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Content Readiness:</td><td>' + escapeHtml(data.contentReady) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Media Link:</td><td>' + escapeHtml(data.mediaLink) + '</td></tr>' +
-        '</table>' +
-      '</div>' +
+          '</table>' +
+          '</div>' +
 
-      '<div style="margin-bottom:16px;">' +
-        '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">5. Technical Setup & Timeline</h2>' +
-        '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
+          '<div style="margin-bottom:16px;">' +
+          '<h2 style="font-family:\'Fraunces\', serif; font-size:15px; color:#4F46E5; border-bottom:1px solid #ECECE8; padding-bottom:4px; margin-bottom:8px;">5. Technical Setup & Timeline</h2>' +
+          '<table style="width:100%; font-size:13px; border-collapse:collapse;">' +
           '<tr><td style="padding:3px 0; width:160px; color:#5B6668;">Domain Status:</td><td>' + escapeHtml(data.domainStatus) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Domain Name:</td><td>' + escapeHtml(data.domainName) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Hosting Status:</td><td>' + escapeHtml(data.hostingStatus) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Required Features:</td><td><strong>' + formatArray(data.features) + '</strong></td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Target Completion Date:</td><td>' + escapeHtml(data.targetDate) + '</td></tr>' +
           '<tr><td style="padding:3px 0; color:#5B6668;">Notes / Budget:</td><td>' + escapeHtml(data.notes) + '</td></tr>' +
-        '</table>' +
-      '</div>' +
+          '</table>' +
+          '</div>' +
 
-      '<div style="margin-top:20px; border-top:1px solid #E1E1DD; padding-top:8px; font-size:11px; color:#5B6668; text-align:center;">' +
-        'Siyantra Project Discovery Brief &bull; Prepared for website development' +
-      '</div>';
+          '<div style="margin-top:20px; border-top:1px solid #E1E1DD; padding-top:8px; font-size:11px; color:#5B6668; text-align:center;">' +
+          'Siyantra Project Discovery Brief &bull; Prepared for website development' +
+          '</div>';
 
-    var opt = {
-      margin: [10, 10, 10, 10],
-      filename: (bizName.replace(/[^a-z0-9]/gi, '_')) + '_Project_Brief.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
+        var opt = {
+          margin: [10, 10, 10, 10],
+          filename: (bizName.replace(/[^a-z0-9]/gi, '_')) + '_Project_Brief.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
 
-    if (window.html2pdf) {
-      html2pdf().set(opt).from(container).save();
-    } else {
-      window.print();
-    }
-  }
+        if (window.html2pdf) {
+          html2pdf().set(opt).from(container).save();
+        } else {
+          window.print();
+        }
+      }
 
-  function setupWhatsAppLink(data){
-    var waBtn = document.getElementById('whatsappBriefBtn');
-    if (!waBtn) return;
+      function setupWhatsAppLink(data) {
+        var waBtn = document.getElementById('whatsappBriefBtn');
+        if (!waBtn) return;
 
-    // You can replace this number with your WhatsApp business number (with country code, no + or spaces)
-    var phoneNumber = "919000000000"; 
-    var text = "🚀 *New Website Project Brief — Siyantra*\n\n" +
-      "*Client Name:* " + (data.clientName || 'N/A') + "\n" +
-      "*Business Name:* " + (data.businessName || 'N/A') + "\n" +
-      "*Industry:* " + (data.industry || 'N/A') + "\n" +
-      "*Contact Email:* " + (data.email || 'N/A') + "\n" +
-      "*Contact Phone:* " + (data.phone || 'N/A') + "\n\n" +
-      "*Objectives:* " + (Array.isArray(data.objectives) ? data.objectives.join(', ') : (data.objectives || 'None')) + "\n" +
-      "*Visual Style:* " + (data.visualStyle || 'Not specified') + "\n" +
-      "*Pages Needed:* " + (Array.isArray(data.pages) ? data.pages.join(', ') : (data.pages || 'None')) + "\n" +
-      "*Domain:* " + (data.domainStatus || 'N/A') + (data.domainName ? ' (' + data.domainName + ')' : '') + "\n" +
-      "*Features:* " + (Array.isArray(data.features) ? data.features.join(', ') : (data.features || 'None')) + "\n" +
-      "*Target Completion Date:* " + (data.targetDate || 'Flexible') + "\n" +
-      "*Notes / Budget:* " + (data.notes || 'None') + "\n\n" +
-      "📁 *PDF Project Brief:* Formatted & saved on device.";
+        // You can replace this number with your WhatsApp business number (with country code, no + or spaces)
+        var phoneNumber = "919000000000";
+        var text = "🚀 *New Website Project Brief — Siyantra*\n\n" +
+          "*Client Name:* " + (data.clientName || 'N/A') + "\n" +
+          "*Business Name:* " + (data.businessName || 'N/A') + "\n" +
+          "*Industry:* " + (data.industry || 'N/A') + "\n" +
+          "*Contact Email:* " + (data.email || 'N/A') + "\n" +
+          "*Contact Phone:* " + (data.phone || 'N/A') + "\n\n" +
+          "*Objectives:* " + (Array.isArray(data.objectives) ? data.objectives.join(', ') : (data.objectives || 'None')) + "\n" +
+          "*Visual Style:* " + (data.visualStyle || 'Not specified') + "\n" +
+          "*Pages Needed:* " + (Array.isArray(data.pages) ? data.pages.join(', ') : (data.pages || 'None')) + "\n" +
+          "*Domain:* " + (data.domainStatus || 'N/A') + (data.domainName ? ' (' + data.domainName + ')' : '') + "\n" +
+          "*Features:* " + (Array.isArray(data.features) ? data.features.join(', ') : (data.features || 'None')) + "\n" +
+          "*Target Completion Date:* " + (data.targetDate || 'Flexible') + "\n" +
+          "*Notes / Budget:* " + (data.notes || 'None') + "\n\n" +
+          "📁 *PDF Project Brief:* Formatted & saved on device.";
 
-    waBtn.href = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(text);
-  }
+        waBtn.href = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(text);
+      }
 
-  // Supabase Credentials (Paste your Supabase URL & Anon Key below)
-  var SUPABASE_URL = "";
-  var SUPABASE_ANON_KEY = "";
-  var supabaseClient = null;
+      // Supabase Credentials (Paste your Supabase URL & Anon Key below)
+      var SUPABASE_URL = "https://czcdsleblkdncyurozpm.supabase.co";
+      var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6Y2RzbGVibGtkbmN5dXJvenBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3NTA2ODIsImV4cCI6MjEwNTMyNjY4Mn0.-4cRKUYYInKhC8fMQW4hAQzoIBdxHmuHbAryAtaiQWI ";
+      var supabaseClient = null;
 
-  if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
+      if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
 
-  async function sendToSupabase(data) {
-    if (!supabaseClient) return;
-    try {
-      var row = {
-        client_name: data.clientName || 'N/A',
-        business_name: data.businessName || 'N/A',
-        tagline: data.tagline || 'N/A',
-        industry: data.industry || 'N/A',
-        email: data.email || 'N/A',
-        phone: data.phone || 'N/A',
-        objectives: Array.isArray(data.objectives) ? data.objectives.join(', ') : (data.objectives || 'N/A'),
-        objectives_detail: data.objectivesDetail || 'N/A',
-        audience: data.audience || 'N/A',
-        competitor1_url: data.competitor1_url || '',
-        competitor1_notes: data.competitor1_notes || '',
-        competitor2_url: data.competitor2_url || '',
-        competitor2_notes: data.competitor2_notes || '',
-        competitor3_url: data.competitor3_url || '',
-        competitor3_notes: data.competitor3_notes || '',
-        visual_style: data.visualStyle || 'N/A',
-        brand_logo: data.brand_logo || 'N/A',
-        brand_guidelines: data.brand_guidelines || 'N/A',
-        brand_colors: data.brand_colors || 'N/A',
-        brand_fonts: data.brand_fonts || 'N/A',
-        inspiration1_url: data.inspiration1_url || '',
-        inspiration1_notes: data.inspiration1_notes || '',
-        inspiration2_url: data.inspiration2_url || '',
-        inspiration2_notes: data.inspiration2_notes || '',
-        inspiration3_url: data.inspiration3_url || '',
-        inspiration3_notes: data.inspiration3_notes || '',
-        pages: Array.isArray(data.pages) ? data.pages.join(', ') : (data.pages || 'N/A'),
-        custom_pages: data.customPages || 'N/A',
-        content_ready: data.contentReady || 'N/A',
-        media_link: data.mediaLink || 'N/A',
-        domain_status: data.domainStatus || 'N/A',
-        domain_name: data.domainName || 'N/A',
-        hosting_status: data.hostingStatus || 'N/A',
-        features: Array.isArray(data.features) ? data.features.join(', ') : (data.features || 'N/A'),
-        target_date: data.targetDate || 'N/A',
-        notes: data.notes || 'N/A'
-      };
+      async function sendToSupabase(data) {
+        if (!supabaseClient) return;
+        try {
+          var row = {
+            client_name: data.clientName || 'N/A',
+            business_name: data.businessName || 'N/A',
+            tagline: data.tagline || 'N/A',
+            industry: data.industry || 'N/A',
+            email: data.email || 'N/A',
+            phone: data.phone || 'N/A',
+            objectives: Array.isArray(data.objectives) ? data.objectives.join(', ') : (data.objectives || 'N/A'),
+            objectives_detail: data.objectivesDetail || 'N/A',
+            audience: data.audience || 'N/A',
+            competitor1_url: data.competitor1_url || '',
+            competitor1_notes: data.competitor1_notes || '',
+            competitor2_url: data.competitor2_url || '',
+            competitor2_notes: data.competitor2_notes || '',
+            competitor3_url: data.competitor3_url || '',
+            competitor3_notes: data.competitor3_notes || '',
+            visual_style: data.visualStyle || 'N/A',
+            brand_logo: data.brand_logo || 'N/A',
+            brand_guidelines: data.brand_guidelines || 'N/A',
+            brand_colors: data.brand_colors || 'N/A',
+            brand_fonts: data.brand_fonts || 'N/A',
+            inspiration1_url: data.inspiration1_url || '',
+            inspiration1_notes: data.inspiration1_notes || '',
+            inspiration2_url: data.inspiration2_url || '',
+            inspiration2_notes: data.inspiration2_notes || '',
+            inspiration3_url: data.inspiration3_url || '',
+            inspiration3_notes: data.inspiration3_notes || '',
+            pages: Array.isArray(data.pages) ? data.pages.join(', ') : (data.pages || 'N/A'),
+            custom_pages: data.customPages || 'N/A',
+            content_ready: data.contentReady || 'N/A',
+            media_link: data.mediaLink || 'N/A',
+            domain_status: data.domainStatus || 'N/A',
+            domain_name: data.domainName || 'N/A',
+            hosting_status: data.hostingStatus || 'N/A',
+            features: Array.isArray(data.features) ? data.features.join(', ') : (data.features || 'N/A'),
+            target_date: data.targetDate || 'N/A',
+            notes: data.notes || 'N/A'
+          };
 
-      const { error } = await supabaseClient.from('briefs').insert([row]);
-      if (error) console.error('Supabase Error:', error);
-    } catch (err) {
-      console.error('Supabase Send Error:', err);
-    }
-  }
+          const { error } = await supabaseClient.from('briefs').insert([row]);
+          if (error) console.error('Supabase Error:', error);
+        } catch (err) {
+          console.error('Supabase Send Error:', err);
+        }
+      }
 
-  loadDraft();
-  buildTabs();
-  goTo(0);
-})();
-</script>
+      loadDraft();
+      buildTabs();
+      goTo(0);
+    })();
+  </script>
 
 </body>
+
 </html>
