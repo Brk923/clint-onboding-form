@@ -130,6 +130,23 @@ app.delete('/api/briefs/:id', async (req, res) => {
   }
 });
 
+// Explicit routes for Admin Dashboard and Client Portal
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+app.get('/admin.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+app.get('/portal', (req, res) => {
+  res.sendFile(path.join(__dirname, 'portel.html'));
+});
+
+app.get('/portel.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'portel.html'));
+});
+
 // Serve portel.html by default
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'portel.html'));
