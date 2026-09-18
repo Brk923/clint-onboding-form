@@ -3,10 +3,33 @@
   "builds": [
     {
       "src": "server.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["portel.html", "admin.html"]
+      }
     }
   ],
   "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server.js"
+    },
+    {
+      "src": "/admin",
+      "dest": "server.js"
+    },
+    {
+      "src": "/admin.html",
+      "dest": "server.js"
+    },
+    {
+      "src": "/portal",
+      "dest": "server.js"
+    },
+    {
+      "src": "/portel.html",
+      "dest": "server.js"
+    },
     {
       "src": "/(.*)",
       "dest": "server.js"

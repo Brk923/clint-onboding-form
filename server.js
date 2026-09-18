@@ -6,19 +6,17 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/siyantra_briefs';
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-// MongoDB Mongoose Schema
+// Mongoose Schema
 const briefSchema = new mongoose.Schema({
   refId: { type: String, default: () => 'SY-' + Math.floor(100000 + Math.random() * 900000) },
-  status: { type: String, default: 'New' }, // New, In Review, Building, Completed
+  status: { type: String, default: 'New' },
   
-  // Section 1: Client & Business Overview
   clientName: { type: String, default: 'N/A' },
   businessName: { type: String, default: 'N/A' },
   tagline: { type: String, default: 'N/A' },
@@ -26,7 +24,6 @@ const briefSchema = new mongoose.Schema({
   email: { type: String, default: 'N/A' },
   phone: { type: String, default: 'N/A' },
   
-  // Section 2: Goals & Audience
   objectives: { type: mongoose.Schema.Types.Mixed, default: 'N/A' },
   objectivesDetail: { type: String, default: 'N/A' },
   audience: { type: String, default: 'N/A' },
@@ -37,7 +34,6 @@ const briefSchema = new mongoose.Schema({
   competitor3_url: { type: String, default: '' },
   competitor3_notes: { type: String, default: '' },
 
-  // Section 3: Branding & Design Direction
   visualStyle: { type: String, default: 'N/A' },
   brand_logo: { type: String, default: 'N/A' },
   brand_guidelines: { type: String, default: 'N/A' },
@@ -50,13 +46,11 @@ const briefSchema = new mongoose.Schema({
   inspiration3_url: { type: String, default: '' },
   inspiration3_notes: { type: String, default: '' },
 
-  // Section 4: Pages & Content
   pages: { type: mongoose.Schema.Types.Mixed, default: 'N/A' },
   customPages: { type: String, default: 'N/A' },
   contentReady: { type: String, default: 'N/A' },
   mediaLink: { type: String, default: 'N/A' },
 
-  // Section 5: Technical Setup & Timeline
   domainStatus: { type: String, default: 'N/A' },
   domainName: { type: String, default: 'N/A' },
   hostingStatus: { type: String, default: 'N/A' },
@@ -67,28 +61,55 @@ const briefSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-const Brief = mongoose.model('Brief', briefSchema);
+const Brief = mongoose.models.Brief || mongoose.model('Brief', briefSchema);
 
-// MongoDB Connect
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('✅ Connected successfully to MongoDB'))
-  .catch((err) => console.error('❌ MongoDB Connection Error:', err));
+// Cached Mongoose connection for Vercel Serverless Functions
+let cachedDb = null;
+
+async function connectToDatabase() {
+  if (cachedDb && mongoose.connection.readyState === 1) {
+    return cachedDb;
+  }
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error('MONGODB_URI environment variable is missing on Vercel.');
+  }
+  cachedDb = await mongoose.connect(uri, {
+    serverSelectionTimeoutMS: 5000
+  });
+  return cachedDb;
+}
+
+// Middleware to ensure Database Connection on API routes
+app.use(async (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    try {
+      await connectToDatabase();
+      next();
+    } catch (err) {
+      console.error('MongoDB connection error:', err);
+      return res.status(500).json({
+        success: false,
+        error: 'MongoDB Connection Failed',
+        details: err.message
+      });
+    }
+  } else {
+    next();
+  }
+});
 
 // API Routes
-
-// 1. Submit a new Brief (Used by portel.html)
 app.post('/api/briefs', async (req, res) => {
   try {
     const newBrief = new Brief(req.body);
     const savedBrief = await newBrief.save();
-    res.status(201).json({ success: true, message: 'Brief saved to MongoDB successfully', brief: savedBrief });
+    res.status(201).json({ success: true, message: 'Brief saved to MongoDB', brief: savedBrief });
   } catch (error) {
-    console.error('Error saving brief:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// 2. Get All Briefs (Used by admin.html)
 app.get('/api/briefs', async (req, res) => {
   try {
     const briefs = await Brief.find().sort({ createdAt: -1 });
@@ -98,7 +119,6 @@ app.get('/api/briefs', async (req, res) => {
   }
 });
 
-// 3. Get Single Brief by ID
 app.get('/api/briefs/:id', async (req, res) => {
   try {
     const brief = await Brief.findById(req.params.id);
@@ -109,7 +129,6 @@ app.get('/api/briefs/:id', async (req, res) => {
   }
 });
 
-// 4. Update Brief Status
 app.patch('/api/briefs/:id/status', async (req, res) => {
   try {
     const { status } = req.body;
@@ -120,7 +139,6 @@ app.patch('/api/briefs/:id/status', async (req, res) => {
   }
 });
 
-// 5. Delete Brief
 app.delete('/api/briefs/:id', async (req, res) => {
   try {
     await Brief.findByIdAndDelete(req.params.id);
@@ -147,12 +165,11 @@ app.get('/portel.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'portel.html'));
 });
 
-// Serve portel.html by default
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'portel.html'));
 });
 
-// Start Server (only if not on Vercel)
+// Start Server locally
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`🚀 Siyantra Backend Server running on http://localhost:${PORT}`);
