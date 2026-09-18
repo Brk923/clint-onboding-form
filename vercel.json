@@ -1,38 +1,8 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["portel.html", "admin.html"]
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "server.js"
-    },
-    {
-      "src": "/admin",
-      "dest": "server.js"
-    },
-    {
-      "src": "/admin.html",
-      "dest": "server.js"
-    },
-    {
-      "src": "/portal",
-      "dest": "server.js"
-    },
-    {
-      "src": "/portel.html",
-      "dest": "server.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "server.js"
-    }
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/", "destination": "/portel.html" }
   ]
 }
