@@ -160,8 +160,10 @@
 
     /* Intro */
     .intro {
-      padding: 44px 0 8px;
-      max-width: 620px;
+      padding: 44px 0 20px;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
     }
 
     .intro h1 {
@@ -177,62 +179,56 @@
 
     /* Layout */
     .layout {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      gap: 40px;
-      margin-top: 36px;
-      align-items: start;
-    }
-
-    @media (max-width: 800px) {
-      .layout {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-    }
-
-    /* Sidebar tabs */
-    .tabs {
-      position: sticky;
-      top: 24px;
       display: flex;
       flex-direction: column;
-      gap: 2px;
-      padding-top: 6px;
+      gap: 24px;
+      max-width: 820px;
+      margin: 24px auto 0;
+      align-items: center;
+      width: 100%;
     }
 
-    @media (max-width: 800px) {
-      .tabs {
-        position: static;
-        flex-direction: row;
-        overflow-x: auto;
-        gap: 0;
-        border-bottom: 1px solid var(--line);
-        padding-bottom: 0;
-      }
+    /* Tabs */
+    .tabs {
+      position: static;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 8px;
+      padding-top: 0;
+      flex-wrap: wrap;
+      width: 100%;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 12px;
     }
 
     .tab-btn {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       text-align: left;
       background: none;
       border: none;
-      border-left: 2px solid transparent;
-      padding: 10px 14px;
+      border-bottom: 2px solid transparent;
+      padding: 8px 14px;
       font-family: 'Inter', sans-serif;
       font-size: 14px;
       color: var(--ink-soft);
       cursor: pointer;
       white-space: nowrap;
+      border-radius: 4px;
+    }
+
+    .tab-btn.active {
+      color: var(--ink);
+      border-bottom-color: var(--brass);
+      background: var(--brass-soft);
+      font-weight: 500;
     }
 
     @media (max-width: 800px) {
       .tab-btn {
-        border-left: none;
-        border-bottom: 2px solid transparent;
-        padding: 12px 14px;
+        padding: 10px 12px;
       }
     }
 
